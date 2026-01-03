@@ -12,6 +12,7 @@ import React from "react";
 interface ResumeCardProps {
   logoUrl: string;
   altText: string;
+  fallbackText?: string;
   title: string;
   subtitle?: string;
   href?: string;
@@ -22,6 +23,7 @@ interface ResumeCardProps {
 export const ResumeCard = ({
   logoUrl,
   altText,
+  fallbackText,
   title,
   subtitle,
   href,
@@ -30,6 +32,22 @@ export const ResumeCard = ({
   description,
 }: ResumeCardProps) => {
   const [isExpanded, setIsExpanded] = React.useState(false);
+  const progressionPrefix = "Progression:";
+  let progression: string | null = null;
+  let progressionItems: string[] = [];
+  let remainder = description || "";
+
+  if (description?.startsWith(progressionPrefix)) {
+    const parts = description.split(". ");
+    progression = parts[0];
+    remainder = parts.slice(1).join(". ").trim();
+    const progressionText = progression.replace(progressionPrefix, "").trim();
+    progressionItems = progressionText
+      .split("->")
+      .map((item) => item.trim())
+      .filter(Boolean)
+      .reverse();
+  }
 
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     if (description) {
@@ -47,12 +65,16 @@ export const ResumeCard = ({
       <Card className="flex">
         <div className="flex-none">
           <Avatar className="border size-12 m-auto bg-muted-background dark:bg-foreground">
-            <AvatarImage
-              src={logoUrl}
-              alt={altText}
-              className="object-contain"
-            />
-            <AvatarFallback>{altText[0]}</AvatarFallback>
+            {logoUrl ? (
+              <AvatarImage
+                src={logoUrl}
+                alt={altText}
+                className="object-contain"
+              />
+            ) : null}
+            <AvatarFallback className="text-xs font-semibold">
+              {fallbackText || altText[0]}
+            </AvatarFallback>
           </Avatar>
         </div>
         <div className="flex-grow ml-4 items-center flex-col group">
@@ -100,7 +122,55 @@ export const ResumeCard = ({
               }}
               className="mt-2 text-xs sm:text-sm"
             >
-              {description}
+              {progression ? (
+                <div className="relative pl-6">
+                  <div className="space-y-2 text-[11px]">
+                    {progressionItems.map((item, index) => {
+                      const isLatest = index === 0;
+                      const position =
+                        progressionItems.length > 1
+                          ? index / (progressionItems.length - 1)
+                          : 0;
+                      const intensity = 0.35 + (1 - position) * 0.45;
+
+                      return (
+                        <div
+                          key={item}
+                          className="relative flex items-start gap-2"
+                          style={{ color: `hsl(var(--foreground) / ${intensity})` }}
+                        >
+                          <span className="relative mt-[5px] size-2">
+                            <span
+                              className={`absolute inset-0 rounded-full ring-2 ring-background ${
+                                isLatest ? "bg-foreground/80" : ""
+                              }`}
+                              style={{
+                                backgroundColor: `hsl(var(--foreground) / ${
+                                  intensity + 0.15
+                                })`,
+                              }}
+                            />
+                            {isLatest ? (
+                              <span
+                                className="absolute inset-[-3px] rounded-full border border-foreground/40 animate-[ping_2.5s_cubic-bezier(0,0,0.2,1)_infinite]"
+                                aria-hidden="true"
+                              />
+                            ) : null}
+                          </span>
+                          <span className={isLatest ? "font-semibold" : "font-medium"}>
+                            {item}
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              ) : null}
+              {remainder ? (
+                <div className={progression ? "mt-2" : undefined}>
+                  {remainder}
+                </div>
+              ) : null}
             </motion.div>
           )}
         </div>
