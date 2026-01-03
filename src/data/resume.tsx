@@ -58,7 +58,7 @@ export const DATA = {
       start: "Jun 2022",
       end: "Present",
       description:
-        "Progression: Senior Network Engineer (Jun 2022 - Apr 2024) -> Staff Network Engineer (Apr 2024 - Apr 2025) -> Staff Software Engineer (Jan 2025 - Present). Focused on networking, security, and automation for Google Distributed Cloud.",
+        "Progression: Senior Network Engineer | 06/2022 - 04/2024 -> Staff Network Engineer | 04/2024 - 04/2025 -> Staff Software Engineer | 01/2025 - Present. Focused on networking, security, and automation for Google Distributed Cloud.",
     },
     {
       company: "Good Spirits Cocktails",
@@ -97,7 +97,7 @@ export const DATA = {
       start: "Apr 2013",
       end: "Jun 2018",
       description:
-        "Progression: Systems Engineer II (Apr 2013 - Jun 2015) -> Technical Consultant (Jul 2015 - Jun 2016) -> Solutions Delivery Team Lead, Security & Enterprise Networks (Jun 2016 - Jun 2018). Delivered next-generation security solutions and specialized in Cisco ISE and enterprise security architectures.",
+        "Progression: Systems Engineer II | 04/2013 - 06/2015 -> Technical Consultant | 07/2015 - 06/2016 -> Solutions Delivery Team Lead, Security & Enterprise Networks | 06/2016 - 06/2018. Delivered next-generation security solutions and specialized in Cisco ISE and enterprise security architectures.",
     },
     {
       company: "United States Marine Corps",

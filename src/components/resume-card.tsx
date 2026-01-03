@@ -132,6 +132,9 @@ export const ResumeCard = ({
                           ? index / (progressionItems.length - 1)
                           : 0;
                       const intensity = 0.35 + (1 - position) * 0.45;
+                      const match = item.match(/^(.*)\s+\|\s+(.*)$/);
+                      const roleTitle = match ? match[1].trim() : item;
+                      const roleDates = match ? match[2].trim() : "";
 
                       return (
                         <div
@@ -157,9 +160,16 @@ export const ResumeCard = ({
                               />
                             ) : null}
                           </span>
-                          <span className={isLatest ? "font-semibold" : "font-medium"}>
-                            {item}
-                          </span>
+                          <div className="flex w-full flex-1 items-start justify-between gap-3">
+                            <div className={isLatest ? "font-semibold" : "font-medium"}>
+                              {roleTitle}
+                            </div>
+                            {roleDates ? (
+                              <div className="text-[9px] text-muted-foreground tabular-nums whitespace-nowrap text-right">
+                                {roleDates}
+                              </div>
+                            ) : null}
+                          </div>
                         </div>
                       );
                     })}
