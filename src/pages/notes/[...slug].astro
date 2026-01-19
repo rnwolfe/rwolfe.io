@@ -1,0 +1,103 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import GlassPanel from '../../components/ui/GlassPanel.astro';
+
+export async function getStaticPaths() {
+	const notes = await getCollection('notes');
+	return notes.map((entry) => ({
+		params: { slug: entry.id },
+		props: { entry },
+	}));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+
+const typeColors: Record<string, string> = {
+  thought: 'text-blue-500 dark:text-blue-400',
+  quote: 'text-purple-500 dark:text-purple-400',
+  til: 'text-emerald-500 dark:text-emerald-400',
+  bookmark: 'text-amber-500 dark:text-amber-400',
+  question: 'text-rose-500 dark:text-rose-400',
+};
+
+const typeLabels: Record<string, string> = {
+  thought: 'Thought',
+  quote: 'Quote',
+  til: 'TIL',
+  bookmark: 'Bookmark',
+  question: 'Question',
+};
+---
+
+<Layout title={`${entry.data.title} | Notes`}>
+  <div class="max-w-3xl mx-auto py-12 md:py-24">
+    <a href="/notes" class="inline-flex items-center gap-2 text-sm font-mono text-gray-500 hover:text-brand-500 transition-colors mb-12 group">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 group-hover:-translate-x-1 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+      Back to all notes
+    </a>
+
+    <GlassPanel class="p-8 md:p-12">
+      <div class="flex items-center justify-between mb-8">
+        <span class={`text-xs font-bold uppercase tracking-[0.2em] font-mono ${typeColors[entry.data.type]}`}>
+          {typeLabels[entry.data.type]}
+        </span>
+        <time datetime={entry.data.pubDate.toISOString()} class="text-xs text-gray-400 dark:text-gray-500 font-mono">
+          {entry.data.pubDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+        </time>
+      </div>
+
+      <article class="prose prose-lg dark:prose-invert max-w-none">
+        {entry.data.type === 'quote' ? (
+          <div class="relative py-4">
+            <span class="absolute -top-8 -left-4 text-9xl text-purple-500/10 font-serif pointer-events-none">"</span>
+            <blockquote class="text-2xl md:text-3xl font-medium italic mb-8 leading-relaxed relative z-10 text-gray-800 dark:text-gray-200 border-none p-0">
+              <Content />
+            </blockquote>
+            {entry.data.source && (
+              <cite class="block text-lg text-gray-500 dark:text-gray-400 not-italic border-l-4 border-purple-500/30 pl-6 py-2">
+                {entry.data.sourceUrl ? (
+                  <a href={entry.data.sourceUrl} class="hover:text-purple-500 transition-colors underline decoration-purple-500/30 underline-offset-4" target="_blank" rel="noopener noreferrer">
+                    {entry.data.source}
+                  </a>
+                ) : (
+                  entry.data.source
+                )}
+              </cite>
+            )}
+          </div>
+        ) : (
+          <>
+            <h1 class="text-3xl md:text-4xl font-bold mb-8 leading-tight">{entry.data.title}</h1>
+            <div class="text-gray-700 dark:text-gray-300 leading-relaxed">
+              <Content />
+            </div>
+          </>
+        )}
+      </article>
+
+      <div class="mt-12 pt-8 border-t border-gray-100 dark:border-white/5 flex flex-wrap gap-3">
+        {entry.data.tags.map((tag) => (
+          <span class="text-xs font-bold font-mono bg-gray-50 dark:bg-white/5 text-gray-400 dark:text-gray-500 px-3 py-1 rounded uppercase tracking-wider">
+            #{tag}
+          </span>
+        ))}
+      </div>
+
+      {entry.data.sourceUrl && entry.data.type === 'bookmark' && (
+        <div class="mt-8">
+          <a 
+            href={entry.data.sourceUrl} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-3 px-6 py-3 bg-brand-500 text-white rounded-xl font-bold hover:bg-brand-600 transition-colors shadow-lg shadow-brand-500/20"
+          >
+            Visit Resource
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          </a>
+        </div>
+      )}
+    </GlassPanel>
+  </div>
+</Layout>

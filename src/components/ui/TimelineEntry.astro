@@ -1,0 +1,179 @@
+---
+import TechStack from './TechStack.astro';
+import GlassPanel from './GlassPanel.astro';
+
+interface Props {
+  date: Date;
+  endDate?: Date;
+  title: string;
+  entryType: 'role' | 'milestone' | 'learning' | 'transition';
+  highlights?: string[];
+  company?: string;
+  role?: string;
+  location?: string;
+  tech?: string[];
+  relatedProjects?: { id: string; slug: string; data: { title: string } }[];
+  class?: string;
+}
+
+const { 
+  date, 
+  endDate, 
+  title, 
+  entryType, 
+  highlights, 
+  company,
+  role,
+  location,
+  tech,
+  relatedProjects,
+  class: className 
+} = Astro.props;
+
+const typeConfigs = {
+  role: {
+    color: 'bg-brand-500',
+    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-2.5 h-2.5"><rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>`,
+    label: 'Professional Experience'
+  },
+  milestone: {
+    color: 'bg-emerald-500',
+    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-2.5 h-2.5"><path d="m12 5 7 7-7 7-7-7 7-7Z"/></svg>`,
+    label: 'Key Achievement'
+  },
+  learning: {
+    color: 'bg-amber-500',
+    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-2.5 h-2.5"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/></svg>`,
+    label: 'Skill Acquired'
+  },
+  transition: {
+    color: 'bg-violet-500',
+    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-2.5 h-2.5"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>`,
+    label: 'Career Pivot'
+  },
+};
+
+const config = typeConfigs[entryType];
+
+const formatDate = (d: Date) => {
+  return d.toLocaleDateString('en-US', {
+    month: 'short',
+    year: 'numeric'
+  });
+};
+---
+
+<div class:list={['relative pl-12 pb-16 last:pb-0 group', className]}>
+  {/* Timeline Line */}
+  <div class="absolute left-[15px] top-0 bottom-0 w-px bg-zinc-800/50 group-last:bg-transparent overflow-hidden">
+    <div class:list={[
+      'absolute inset-0 w-full origin-top scale-y-0 group-hover:scale-y-100 transition-transform duration-700 ease-out opacity-50',
+      config.color
+    ]}></div>
+  </div>
+  
+  {/* Timeline Dot */}
+  <div class:list={[
+    'absolute left-0 top-1 w-8 h-8 rounded-full border-4 border-[#0a0a0a] z-20 flex items-center justify-center text-white transition-all duration-300 group-hover:scale-110 group-hover:shadow-[0_0_20px_rgba(255,255,255,0.1)]',
+    config.color
+  ]}>
+    <Fragment set:html={config.icon} />
+  </div>
+
+  <div class="flex flex-col gap-2">
+    <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
+      <time class="text-xs font-bold font-mono text-zinc-500 uppercase tracking-tighter">
+        {formatDate(date)} {endDate ? `— ${formatDate(endDate)}` : '— Present'}
+      </time>
+      <span class:list={[
+        'px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-widest bg-zinc-900 border border-zinc-800 text-zinc-500 group-hover:border-zinc-700 transition-colors',
+      ]}>
+        {config.label}
+      </span>
+    </div>
+    
+    <div class="space-y-1">
+      <h3 class="text-xl font-bold text-zinc-100 font-sans group-hover:text-brand-400 transition-colors">
+        {title}
+      </h3>
+      {(company || role) && (
+        <div class="flex items-center gap-2 text-zinc-400 font-medium">
+          {role && <span>{role}</span>}
+          {role && company && <span class="text-zinc-600">•</span>}
+          {company && <span class="text-brand-300/80">{company}</span>}
+          {location && <span class="text-zinc-600 ml-1">({location})</span>}
+        </div>
+      )}
+    </div>
+
+    {highlights && highlights.length > 0 && (
+      <ul class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-3">
+        {highlights.map((highlight) => (
+          <li class="flex items-start gap-3 text-sm text-zinc-400 leading-relaxed bg-white/2 border border-white/5 p-2 rounded-lg group-hover:bg-white/5 transition-colors">
+            <span class:list={["mt-1.5 w-1.5 h-1.5 rounded-full shrink-0", config.color]}></span>
+            <span>{highlight}</span>
+          </li>
+        ))}
+      </ul>
+    )}
+
+    {tech && tech.length > 0 && (
+      <div class="mt-4">
+        <TechStack tech={tech} />
+      </div>
+    )}
+
+    {relatedProjects && relatedProjects.length > 0 && (
+      <div class="mt-4 flex flex-wrap gap-2 items-center">
+        <span class="text-[10px] font-bold uppercase tracking-widest text-zinc-600">Case Studies:</span>
+        {relatedProjects.map((project) => (
+          <a 
+            href={`/projects/${project.id}`}
+            class="text-xs font-medium text-brand-400 hover:text-brand-300 transition-colors bg-brand-500/5 border border-brand-500/10 px-2 py-0.5 rounded"
+          >
+            {project.data.title}
+          </a>
+        ))}
+      </div>
+    )}
+
+    <div class="mt-6">
+      <details class="group/details">
+        <summary class="list-none cursor-pointer flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-zinc-500 hover:text-brand-400 transition-colors">
+          <span class="group-open/details:rotate-90 transition-transform duration-200">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="w-3 h-3"><path d="m9 18 6-6-6-6"/></svg>
+          </span>
+          <span class="group-open/details:hidden">Read Reflection</span>
+          <span class="hidden group-open/details:inline">Close</span>
+        </summary>
+        <div class="pt-6 mt-4 border-t border-white/5 journey-content">
+          <slot />
+        </div>
+      </details>
+    </div>
+  </div>
+</div>
+
+<style is:global>
+  .journey-content p {
+    margin-bottom: 1.25rem;
+    line-height: 1.75;
+    color: #a1a1aa; /* text-zinc-400 */
+  }
+  .journey-content p:last-child {
+    margin-bottom: 0;
+  }
+  .journey-content strong {
+    color: #f4f4f5; /* text-zinc-100 */
+    font-weight: 600;
+  }
+  .journey-content a {
+    color: var(--color-brand-400);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    transition: color 0.2s;
+  }
+  .journey-content a:hover {
+    color: var(--color-brand-300);
+  }
+</style>

@@ -1,0 +1,44 @@
+---
+import GlassPanel from './GlassPanel.astro';
+
+interface Metric {
+  label: string;
+  value: string;
+  change?: string;
+}
+
+interface Props {
+  metrics: Metric[];
+  class?: string;
+}
+
+const { metrics, class: className } = Astro.props;
+
+const getChangeColor = (change: string) => {
+  if (change.startsWith('+')) return 'text-emerald-400';
+  if (change.startsWith('-')) return 'text-rose-400';
+  return 'text-zinc-400';
+};
+---
+
+<GlassPanel class:list={['p-4 sm:p-6', className]}>
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8">
+    {metrics.map((metric) => (
+      <div class="flex flex-col gap-1">
+        <span class="text-xs font-medium text-zinc-500 uppercase tracking-widest font-mono">
+          {metric.label}
+        </span>
+        <div class="flex items-baseline gap-2">
+          <span class="text-xl sm:text-2xl font-bold text-white font-sans">
+            {metric.value}
+          </span>
+          {metric.change && (
+            <span class:list={['text-xs font-medium font-mono', getChangeColor(metric.change)]}>
+              {metric.change}
+            </span>
+          )}
+        </div>
+      </div>
+    ))}
+  </div>
+</GlassPanel>

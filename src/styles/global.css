@@ -48,6 +48,18 @@
   }
 }
 
+/* ===== UTILITIES ===== */
+.bg-brand-gradient {
+  background: linear-gradient(135deg, var(--color-brand-500) 0%, var(--color-brand-600) 100%);
+}
+
+.text-gradient {
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-image: linear-gradient(135deg, var(--color-brand-400) 0%, var(--color-brand-600) 100%);
+}
+
 /* ===== GLASS PANEL EFFECT ===== */
 .glass-panel {
   background: rgba(255, 255, 255, 0.7);

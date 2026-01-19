@@ -1,0 +1,130 @@
+---
+import { getCollection, render, getEntries } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import TimelineEntry from '../components/ui/TimelineEntry.astro';
+import GlassPanel from '../components/ui/GlassPanel.astro';
+
+const journeyEntries = await getCollection('journey');
+const sortedEntries = journeyEntries.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+// Process entries to include rendered content and resolved projects
+const processedEntries = await Promise.all(
+  sortedEntries.map(async (entry) => {
+    const { Content } = await render(entry);
+    const relatedProjects = entry.data.relatedProjects 
+      ? await getEntries(entry.data.relatedProjects) 
+      : [];
+    return { ...entry, Content, resolvedProjects: relatedProjects };
+  })
+);
+
+const title = "Career Journey | Ryan Wolfe";
+const description = "A timeline of my professional growth, key milestones, and the lessons learned along the way.";
+---
+
+<Layout title={title}>
+  <div class="relative min-h-screen pt-20 pb-32">
+    {/* Background Decorative Elements */}
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-full -z-10 pointer-events-none">
+      <div class="absolute top-[10%] left-[10%] w-64 h-64 bg-brand-500/10 rounded-full blur-[120px]"></div>
+      <div class="absolute bottom-[20%] right-[10%] w-96 h-96 bg-violet-500/10 rounded-full blur-[150px]"></div>
+    </div>
+
+    <div class="max-w-4xl mx-auto px-6">
+      {/* Header Section */}
+      <header class="mb-24 space-y-6">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-500/10 border border-brand-500/20 text-brand-400 text-xs font-bold tracking-widest uppercase">
+          <span class="relative flex h-2 w-2">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-brand-500"></span>
+          </span>
+          Evolution
+        </div>
+        
+        <h1 class="text-5xl md:text-7xl font-bold tracking-tight text-white font-sans">
+          The <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-400 to-violet-400">Journey</span> So Far
+        </h1>
+        
+        <p class="text-xl text-zinc-400 max-w-2xl leading-relaxed">
+          {description}
+        </p>
+      </header>
+
+      {/* Stats/Overview Glass Panel */}
+      <GlassPanel class="p-8 mb-24 border-white/5 bg-white/2 backdrop-blur-md">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div class="space-y-1">
+            <span class="text-xs font-bold text-zinc-500 uppercase tracking-widest">Experience</span>
+            <p class="text-2xl font-bold text-zinc-100 font-mono">8+ Years</p>
+          </div>
+          <div class="space-y-1">
+            <span class="text-xs font-bold text-zinc-500 uppercase tracking-widest">Roles</span>
+            <p class="text-2xl font-bold text-zinc-100 font-mono">4 Major</p>
+          </div>
+          <div class="space-y-1">
+            <span class="text-xs font-bold text-zinc-500 uppercase tracking-widest">Tech Stack</span>
+            <p class="text-2xl font-bold text-zinc-100 font-mono">Polyglot</p>
+          </div>
+          <div class="space-y-1">
+            <span class="text-xs font-bold text-zinc-500 uppercase tracking-widest">Focus</span>
+            <p class="text-2xl font-bold text-zinc-100 font-mono">System Arch</p>
+          </div>
+        </div>
+      </GlassPanel>
+
+      {/* Timeline Section */}
+      <div class="relative space-y-4">
+        {processedEntries.map(({ data, Content, resolvedProjects }) => (
+          <TimelineEntry
+            date={data.date}
+            endDate={data.endDate}
+            title={data.title}
+            entryType={data.entryType}
+            highlights={data.highlights}
+            company={data.company}
+            role={data.role}
+            location={data.location}
+            tech={data.tech}
+            relatedProjects={resolvedProjects}
+          >
+            <Content />
+          </TimelineEntry>
+        ))}
+      </div>
+
+      {/* End of Journey Marker */}
+      <div class="mt-20 flex flex-col items-center text-center space-y-4">
+        <div class="w-px h-24 bg-gradient-to-b from-zinc-800 to-transparent"></div>
+        <div class="p-4 rounded-full bg-zinc-900 border border-zinc-800 text-zinc-500">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6"><path d="M12 2v20"/><path d="m17 17-5 5-5-5"/></svg>
+        </div>
+        <p class="text-zinc-500 font-medium italic">To be continued...</p>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  /* Custom scrollbar for the page to match the vibe */
+  :root {
+    scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+    scrollbar-width: thin;
+  }
+  
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+</style>

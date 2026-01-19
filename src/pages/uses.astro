@@ -1,0 +1,130 @@
+---
+import Layout from '../layouts/Layout.astro';
+import GlassPanel from '../components/ui/GlassPanel.astro';
+import { getCollection } from 'astro:content';
+import { Icon } from 'astro-icon/components';
+
+const uses = await getCollection('uses');
+
+const categories = ['tools', 'stack', 'hardware', 'services', 'workflow'] as const;
+
+const groupedUses = categories.reduce((acc, category) => {
+  const items = uses
+    .filter((item) => item.data.category === category)
+    .sort((a, b) => (a.data.order ?? 0) - (b.data.order ?? 0));
+  if (items.length > 0) {
+    acc[category] = items;
+  }
+  return acc;
+}, {} as Record<string, typeof uses>);
+
+const categoryLabels: Record<string, string> = {
+  tools: 'Tools & Software',
+  stack: 'Tech Stack',
+  hardware: 'Hardware',
+  services: 'Services',
+  workflow: 'Workflow',
+};
+
+const categoryIcons: Record<string, string> = {
+  tools: 'lucide:wrench',
+  stack: 'lucide:layers',
+  hardware: 'lucide:monitor',
+  services: 'lucide:cloud',
+  workflow: 'lucide:git-branch',
+};
+---
+
+<Layout title="Uses | Tech Stack">
+  <div class="space-y-16 pb-20">
+    <!-- Header -->
+    <header class="max-w-3xl">
+      <h1 class="text-4xl md:text-5xl font-bold font-sans mb-6">
+        <span class="text-gradient">Uses</span> & Tech Stack
+      </h1>
+      <p class="text-lg text-gray-600 dark:text-gray-400 leading-relaxed">
+        A living document of the tools, technologies, and hardware I use to build software and stay productive. 
+        My philosophy is simple: prioritize tools that disappear into the background and let me stay in flow state. 
+        I value speed, extensibility, and robustness over the latest trends.
+      </p>
+    </header>
+
+    <!-- Categories -->
+    {categories.map((category) => groupedUses[category] && (
+      <section class="space-y-8">
+        <div class="flex items-center gap-3 border-b border-gray-200 dark:border-gray-800 pb-4">
+          <div class="p-2 rounded-lg bg-brand-50 dark:bg-brand-900/20 text-brand-600 dark:text-brand-400">
+            <Icon name={categoryIcons[category]} class="w-6 h-6" />
+          </div>
+          <h2 class="text-2xl font-bold font-sans">{categoryLabels[category]}</h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {groupedUses[category].map((item) => (
+            <GlassPanel class="p-6 h-full flex flex-col group hover:border-brand-500/30 transition-colors">
+              <div class="flex items-start justify-between mb-4">
+                <div class="flex items-center gap-3">
+                  {item.data.icon && (
+                    <div class="text-2xl">
+                      {item.data.icon.startsWith('lucide:') ? (
+                        <Icon name={item.data.icon} class="w-6 h-6 text-brand-500" />
+                      ) : (
+                        <span>{item.data.icon}</span>
+                      )}
+                    </div>
+                  )}
+                  <h3 class="text-xl font-bold font-sans group-hover:text-brand-500 transition-colors">
+                    {item.data.url ? (
+                      <a href={item.data.url} target="_blank" rel="noopener noreferrer" class="flex items-center gap-1">
+                        {item.data.title}
+                        <Icon name="lucide:external-link" class="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+                      </a>
+                    ) : (
+                      item.data.title
+                    )}
+                  </h3>
+                </div>
+              </div>
+
+              <p class="text-gray-600 dark:text-gray-400 text-sm mb-6 flex-grow">
+                {item.data.description}
+              </p>
+
+              {item.data.reasoning && (
+                <div class="mt-auto space-y-4">
+                  <div class="pt-4 border-t border-gray-100 dark:border-gray-800">
+                    <h4 class="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-2">Why this?</h4>
+                    <p class="text-sm text-gray-700 dark:text-gray-300 italic">
+                      "{item.data.reasoning}"
+                    </p>
+                  </div>
+
+                  {item.data.alternatives && item.data.alternatives.length > 0 && (
+                    <div>
+                      <h4 class="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-2">Alternatives</h4>
+                      <div class="flex flex-wrap gap-2">
+                        {item.data.alternatives.map((alt) => (
+                          <span class="text-[10px] px-2 py-0.5 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400">
+                            {alt}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </GlassPanel>
+          ))}
+        </div>
+      </section>
+    ))}
+
+    <!-- Footer Note -->
+    <GlassPanel class="p-8 text-center bg-brand-50/50 dark:bg-brand-900/5">
+      <p class="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+        Inspired by <a href="https://uses.tech" target="_blank" rel="noopener noreferrer" class="text-brand-500 hover:underline">uses.tech</a>. 
+        Last updated January 2026.
+      </p>
+    </GlassPanel>
+  </div>
+</Layout>

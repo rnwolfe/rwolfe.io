@@ -1,0 +1,19 @@
+---
+import { getCollection, render } from 'astro:content';
+import Decision from '../../layouts/Decision.astro';
+
+export async function getStaticPaths() {
+	const decisions = await getCollection('decisions');
+	return decisions.map((decision) => ({
+		params: { slug: decision.id },
+		props: decision,
+	}));
+}
+
+const decision = Astro.props;
+const { Content } = await render(decision);
+---
+
+<Decision {...decision.data}>
+	<Content />
+</Decision>
