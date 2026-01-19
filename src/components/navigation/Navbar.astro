@@ -1,0 +1,54 @@
+---
+import { Icon } from 'astro-icon/components';
+import ThemeToggle from '../ui/ThemeToggle.astro';
+---
+
+<nav class="glass-panel p-4 mb-12 flex justify-between items-center sticky top-4 z-50 rounded-2xl">
+  <a href="/" class="text-xl font-bold font-mono flex items-center gap-2 hover:text-brand-600 transition-colors group">
+    <Icon name="lucide:terminal" class="w-6 h-6 text-brand-500 group-hover:rotate-12 transition-transform" />
+    <span id="logo-text" data-value="rwolfe.io">rwolfe.io</span>
+  </a>
+
+  <div class="flex items-center gap-6">
+    <div class="hidden md:flex items-center gap-6 text-sm font-medium">
+      <a href="/" class="hover:text-brand-500 transition-colors">Home</a>
+      <a href="/projects" class="hover:text-brand-500 transition-colors">Projects</a>
+      <a href="/blog" class="hover:text-brand-500 transition-colors">Blog</a>
+      <a href="/about" class="hover:text-brand-500 transition-colors">About</a>
+    </div>
+    <ThemeToggle />
+  </div>
+</nav>
+
+<script>
+  const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+  document.addEventListener('astro:page-load', () => {
+    const element = document.getElementById('logo-text') as HTMLElement | null;
+    if (!element) return;
+
+    let intervalId: ReturnType<typeof setInterval> | null = null;
+
+    element.onmouseover = () => {
+      let iteration = 0;
+      const originalValue = element.dataset.value || '';
+
+      if (intervalId) clearInterval(intervalId);
+
+      intervalId = setInterval(() => {
+        element.innerText = originalValue
+          .split('')
+          .map((letter: string, index: number) => {
+            if (index < iteration) return originalValue[index];
+            return letters[Math.floor(Math.random() * letters.length)];
+          })
+          .join('');
+
+        if (iteration >= originalValue.length) {
+          if (intervalId) clearInterval(intervalId);
+        }
+        iteration += 1 / 3;
+      }, 30);
+    };
+  });
+</script>

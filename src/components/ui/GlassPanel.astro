@@ -1,0 +1,7 @@
+---
+const { class: className } = Astro.props;
+---
+
+<div class:list={['glass-panel rounded-3xl', className]}>
+  <slot />
+</div>
