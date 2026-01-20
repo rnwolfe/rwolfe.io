@@ -4,7 +4,8 @@ import NoiseOverlay from '../components/ui/NoiseOverlay.astro';
 import Navbar from '../components/navigation/Navbar.astro';
 import '../styles/global.css';
 
-const { title } = Astro.props;
+const { title, description } = Astro.props;
+const ogImage = Astro.props.ogImage || (Astro.url.pathname !== '/' ? `/og${Astro.url.pathname.replace(/\/$/, '')}.png` : '/og/home.png');
 ---
 
 <html lang="en" class="scroll-smooth">
@@ -17,6 +18,16 @@ const { title } = Astro.props;
       rel="stylesheet"
     />
     <title>{title}</title>
+    <meta name="description" content={description || "Personal website of Ryan Wolfe"} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description || "Personal website of Ryan Wolfe"} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={Astro.url} />
+    {ogImage && <meta property="og:image" content={new URL(ogImage, Astro.site)} />}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description || "Personal website of Ryan Wolfe"} />
+    {ogImage && <meta name="twitter:image" content={new URL(ogImage, Astro.site)} />}
     <ClientRouter />
   </head>
   <body

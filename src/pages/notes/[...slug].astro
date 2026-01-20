@@ -31,7 +31,7 @@ const typeLabels: Record<string, string> = {
 };
 ---
 
-<Layout title={`${entry.data.title} | Notes`}>
+<Layout title={`${entry.data.title} | Notes`} description={entry.data.type}>
   <div class="max-w-3xl mx-auto py-12 md:py-24">
     <a href="/notes" class="inline-flex items-center gap-2 text-sm font-mono text-gray-500 hover:text-brand-500 transition-colors mb-12 group">
       <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 group-hover:-translate-x-1 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>

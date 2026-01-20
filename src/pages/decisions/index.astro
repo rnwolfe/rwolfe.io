@@ -43,8 +43,8 @@ const categories = [...new Set(decisions.map((d) => d.data.category).filter(Bool
 					</ul>
 				</div>
 				
-				<GlassPanel class="p-4 bg-brand-500/5 border-brand-500/10">
-					<p class="text-xs text-brand-600 dark:text-brand-400 leading-relaxed">
+				<GlassPanel class="p-4 bg-brand-500/10 dark:bg-brand-500/5 border border-brand-500/20 dark:border-brand-500/10">
+					<p class="text-xs text-brand-700 dark:text-brand-400 leading-relaxed">
 						<strong>What is an ADR?</strong><br/>
 						An Architectural Decision Record is a document that captures an important architectural decision made along with its context and consequences.
 					</p>
@@ -64,18 +64,18 @@ const categories = [...new Set(decisions.map((d) => d.data.category).filter(Bool
 									<div class="space-y-4 flex-1">
 										<div class="flex flex-wrap items-center gap-3">
 											<StatusBadge status={decision.data.status} />
-											<span class="text-xs text-zinc-500 font-mono">
+											<span class="text-xs text-zinc-400 dark:text-zinc-500 font-mono">
 												<FormattedDate date={decision.data.pubDate} />
 											</span>
 											{decision.data.category && (
-												<span class="px-2 py-0.5 rounded-full text-[10px] font-bold border border-zinc-200 dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-900 text-zinc-500 uppercase tracking-wider">
+												<span class="px-2 py-0.5 rounded-full text-[10px] font-bold border border-zinc-200 dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400 uppercase tracking-wider">
 													{decision.data.category}
 												</span>
 											)}
 										</div>
 										
 										<div class="space-y-2">
-											<h3 class="text-2xl font-bold text-zinc-900 dark:text-white group-hover:text-brand-500 transition-colors tracking-tight">
+											<h3 class="text-2xl font-bold text-zinc-900 dark:text-white group-hover:text-brand-600 dark:group-hover:text-brand-500 transition-colors tracking-tight">
 												{decision.data.title}
 											</h3>
 											<p class="text-zinc-600 dark:text-zinc-400 line-clamp-2 leading-relaxed">
@@ -86,7 +86,7 @@ const categories = [...new Set(decisions.map((d) => d.data.category).filter(Bool
 										<div class="flex items-center gap-4 pt-2">
 											<div class="flex flex-wrap gap-2">
 												{decision.data.tags.slice(0, 3).map((tag: string) => (
-													<span class="text-[10px] text-zinc-500 font-medium">#{tag}</span>
+													<span class="text-[10px] text-zinc-400 dark:text-zinc-500 font-medium">#{tag}</span>
 												))}
 											</div>
 										</div>

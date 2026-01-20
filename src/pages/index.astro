@@ -1,7 +1,28 @@
 ---
 import { Icon } from 'astro-icon/components';
+import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 import GlassPanel from '../components/ui/GlassPanel.astro';
+
+// Get the latest project
+const projects = await getCollection('projects');
+projects.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+const latestProject = projects[0];
+
+// Calculate days since publication
+const daysSince = latestProject
+  ? Math.floor((Date.now() - latestProject.data.pubDate.valueOf()) / (1000 * 60 * 60 * 24))
+  : 0;
+const timeAgo =
+  daysSince === 0
+    ? 'Today'
+    : daysSince === 1
+      ? 'Yesterday'
+      : daysSince < 7
+        ? `${daysSince} days ago`
+        : daysSince < 30
+          ? `${Math.floor(daysSince / 7)} weeks ago`
+          : `${Math.floor(daysSince / 30)} months ago`;
 ---
 
 <Layout title="Ryan Wolfe | Creative Developer">
@@ -127,22 +148,45 @@ import GlassPanel from '../components/ui/GlassPanel.astro';
     </GlassPanel>
 
     <!-- 5. Latest Project -->
-    <a href="/projects" class="md:col-span-1 md:row-span-1">
-      <GlassPanel class="p-6 relative overflow-hidden group cursor-pointer h-full">
-        <div
-          class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity"
-        >
-          <Icon name="lucide:cpu" class="w-24 h-24" />
-        </div>
-        <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-1">
-          Latest Deploy
-        </h3>
-        <p class="text-2xl font-bold truncate">SaaS Analytics Dashboard</p>
-        <div class="mt-4 flex items-center gap-2 text-sm text-green-600 dark:text-green-400">
-          <Icon name="lucide:check-circle-2" class="w-4 h-4" />
-          <span>Shipped 2 days ago</span>
-        </div>
-      </GlassPanel>
-    </a>
+    {latestProject ? (
+      <a href={`/projects/${latestProject.id}`} class="md:col-span-1 md:row-span-1">
+        <GlassPanel class="p-6 relative overflow-hidden group cursor-pointer h-full">
+          <div
+            class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity"
+          >
+            <Icon name="lucide:rocket" class="w-24 h-24" />
+          </div>
+          <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-1">
+            Latest Project
+          </h3>
+          <p class="text-2xl font-bold truncate">{latestProject.data.title}</p>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">
+            {latestProject.data.outcomeSummary}
+          </p>
+          <div class="mt-4 flex items-center gap-2 text-sm text-green-600 dark:text-green-400">
+            <Icon name="lucide:check-circle-2" class="w-4 h-4" />
+            <span>Shipped {timeAgo}</span>
+          </div>
+        </GlassPanel>
+      </a>
+    ) : (
+      <a href="/projects" class="md:col-span-1 md:row-span-1">
+        <GlassPanel class="p-6 relative overflow-hidden group cursor-pointer h-full">
+          <div
+            class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity"
+          >
+            <Icon name="lucide:cpu" class="w-24 h-24" />
+          </div>
+          <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-1">
+            Latest Deploy
+          </h3>
+          <p class="text-2xl font-bold truncate">Coming Soon</p>
+          <div class="mt-4 flex items-center gap-2 text-sm text-gray-500">
+            <Icon name="lucide:clock" class="w-4 h-4" />
+            <span>Projects in progress</span>
+          </div>
+        </GlassPanel>
+      </a>
+    )}
   </div>
 </Layout>

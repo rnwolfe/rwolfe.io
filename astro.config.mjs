@@ -11,7 +11,7 @@ import icon from 'astro-icon';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://example.com',
+  site: 'https://rwolfe.io',
   integrations: [mdx(), sitemap(), react(), icon()],
 
   vite: {

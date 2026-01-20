@@ -9,31 +9,31 @@ const { status, class: className } = Astro.props;
 const statusConfigs = {
   draft: {
     label: 'Draft',
-    classes: 'bg-amber-400/10 text-amber-400 border-amber-400/20',
+    classes: 'bg-amber-100 dark:bg-amber-400/10 text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-400/20',
   },
   proposed: {
     label: 'Proposed',
-    classes: 'bg-amber-400/10 text-amber-400 border-amber-400/20',
+    classes: 'bg-amber-100 dark:bg-amber-400/10 text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-400/20',
   },
   ongoing: {
     label: 'Ongoing',
-    classes: 'bg-sky-400/10 text-sky-400 border-sky-400/20',
+    classes: 'bg-sky-100 dark:bg-sky-400/10 text-sky-700 dark:text-sky-400 border-sky-200 dark:border-sky-400/20',
   },
   completed: {
     label: 'Completed',
-    classes: 'bg-emerald-400/10 text-emerald-400 border-emerald-400/20',
+    classes: 'bg-emerald-100 dark:bg-emerald-400/10 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-400/20',
   },
   accepted: {
     label: 'Accepted',
-    classes: 'bg-emerald-400/10 text-emerald-400 border-emerald-400/20',
+    classes: 'bg-emerald-100 dark:bg-emerald-400/10 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-400/20',
   },
   archived: {
     label: 'Archived',
-    classes: 'bg-zinc-400/10 text-zinc-400 border-zinc-400/20',
+    classes: 'bg-zinc-100 dark:bg-zinc-400/10 text-zinc-700 dark:text-zinc-400 border-zinc-200 dark:border-zinc-400/20',
   },
   deprecated: {
     label: 'Deprecated',
-    classes: 'bg-zinc-400/10 text-zinc-400 border-zinc-400/20',
+    classes: 'bg-zinc-100 dark:bg-zinc-400/10 text-zinc-700 dark:text-zinc-400 border-zinc-200 dark:border-zinc-400/20',
   },
   featured: {
     label: 'Featured',
@@ -41,7 +41,7 @@ const statusConfigs = {
   },
   superseded: {
     label: 'Superseded',
-    classes: 'bg-violet-400/10 text-violet-400 border-violet-400/20',
+    classes: 'bg-violet-100 dark:bg-violet-400/10 text-violet-700 dark:text-violet-400 border-violet-200 dark:border-violet-400/20',
   },
 };
 

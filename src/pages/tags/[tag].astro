@@ -1,0 +1,250 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import GlassPanel from '../../components/ui/GlassPanel.astro';
+import StatusBadge from '../../components/ui/StatusBadge.astro';
+import FormattedDate from '../../components/FormattedDate.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const blog = await getCollection('blog');
+  const notes = await getCollection('notes');
+  const decisions = await getCollection('decisions');
+  const projects = await getCollection('projects');
+
+  // Collect all unique tags
+  const allTags = new Set<string>();
+
+  blog.forEach((post) => {
+    (post.data.tags || []).forEach((tag: string) => allTags.add(tag.toLowerCase()));
+  });
+
+  notes.forEach((note) => {
+    (note.data.tags || []).forEach((tag: string) => allTags.add(tag.toLowerCase()));
+  });
+
+  decisions.forEach((decision) => {
+    (decision.data.tags || []).forEach((tag: string) => allTags.add(tag.toLowerCase()));
+  });
+
+  projects.forEach((project) => {
+    (project.data.tech || []).forEach((tech: string) => allTags.add(tech.toLowerCase()));
+  });
+
+  return [...allTags].map((tag) => ({
+    params: { tag },
+    props: { tag },
+  }));
+}
+
+const { tag } = Astro.props;
+
+// Fetch all content and filter by tag
+const blog = await getCollection('blog');
+const notes = await getCollection('notes');
+const decisions = await getCollection('decisions');
+const projects = await getCollection('projects');
+
+const matchingBlog = blog.filter((post) =>
+  (post.data.tags || []).some((t: string) => t.toLowerCase() === tag)
+);
+
+const matchingNotes = notes.filter((note) =>
+  (note.data.tags || []).some((t: string) => t.toLowerCase() === tag)
+);
+
+const matchingDecisions = decisions.filter((decision) =>
+  (decision.data.tags || []).some((t: string) => t.toLowerCase() === tag)
+);
+
+const matchingProjects = projects.filter((project) =>
+  (project.data.tech || []).some((t: string) => t.toLowerCase() === tag)
+);
+
+const totalCount =
+  matchingBlog.length + matchingNotes.length + matchingDecisions.length + matchingProjects.length;
+
+// Sort each by date
+const sortByDate = (a: any, b: any) => {
+  const dateA = a.data.pubDate || a.data.date;
+  const dateB = b.data.pubDate || b.data.date;
+  return dateB.valueOf() - dateA.valueOf();
+};
+
+matchingBlog.sort(sortByDate);
+matchingNotes.sort(sortByDate);
+matchingDecisions.sort(sortByDate);
+matchingProjects.sort(sortByDate);
+---
+
+<Layout title={`Tag: ${tag}`}>
+  <div class="max-w-4xl mx-auto py-12">
+    <header class="mb-12">
+      <a
+        href="/tags"
+        class="inline-flex items-center gap-2 text-sm text-zinc-500 hover:text-brand-500 transition-colors mb-4"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+        All Tags
+      </a>
+      <h1 class="text-4xl md:text-5xl font-bold font-mono mb-4 text-zinc-900 dark:text-white">
+        #{tag}
+      </h1>
+      <p class="text-zinc-500 dark:text-zinc-400">
+        {totalCount} {totalCount === 1 ? 'item' : 'items'} tagged with "{tag}"
+      </p>
+    </header>
+
+    <div class="space-y-12">
+      {/* Projects */}
+      {matchingProjects.length > 0 && (
+        <section>
+          <h2 class="text-xs font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest font-mono mb-4">
+            Projects ({matchingProjects.length})
+          </h2>
+          <div class="space-y-4">
+            {matchingProjects.map((project) => (
+              <a href={`/projects/${project.id}`} class="block group">
+                <GlassPanel class="p-6 hover:border-brand-500/30 transition-all">
+                  <div class="flex items-start justify-between gap-4">
+                    <div class="flex-1 min-w-0">
+                      <div class="flex items-center gap-3 mb-2">
+                        <StatusBadge status={project.data.status} />
+                        <span class="text-xs text-zinc-400 dark:text-zinc-500 font-mono">
+                          <FormattedDate date={project.data.pubDate} />
+                        </span>
+                      </div>
+                      <h3 class="text-lg font-bold text-zinc-900 dark:text-white group-hover:text-brand-500 transition-colors">
+                        {project.data.title}
+                      </h3>
+                      <p class="text-sm text-zinc-500 dark:text-zinc-400 mt-1 line-clamp-2">
+                        {project.data.outcomeSummary}
+                      </p>
+                    </div>
+                    <svg
+                      class="w-5 h-5 text-zinc-300 dark:text-zinc-600 group-hover:text-brand-500 group-hover:translate-x-1 transition-all shrink-0"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </div>
+                </GlassPanel>
+              </a>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Blog Posts */}
+      {matchingBlog.length > 0 && (
+        <section>
+          <h2 class="text-xs font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest font-mono mb-4">
+            Blog Posts ({matchingBlog.length})
+          </h2>
+          <div class="space-y-4">
+            {matchingBlog.map((post) => (
+              <a href={`/blog/${post.id}`} class="block group">
+                <GlassPanel class="p-6 hover:border-brand-500/30 transition-all">
+                  <div class="flex items-start justify-between gap-4">
+                    <div class="flex-1 min-w-0">
+                      <span class="text-xs text-zinc-400 dark:text-zinc-500 font-mono">
+                        <FormattedDate date={post.data.pubDate} />
+                      </span>
+                      <h3 class="text-lg font-bold text-zinc-900 dark:text-white group-hover:text-brand-500 transition-colors mt-1">
+                        {post.data.title}
+                      </h3>
+                      <p class="text-sm text-zinc-500 dark:text-zinc-400 mt-1 line-clamp-2">
+                        {post.data.description}
+                      </p>
+                    </div>
+                    <svg
+                      class="w-5 h-5 text-zinc-300 dark:text-zinc-600 group-hover:text-brand-500 group-hover:translate-x-1 transition-all shrink-0"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </div>
+                </GlassPanel>
+              </a>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Decisions */}
+      {matchingDecisions.length > 0 && (
+        <section>
+          <h2 class="text-xs font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest font-mono mb-4">
+            Decisions ({matchingDecisions.length})
+          </h2>
+          <div class="space-y-4">
+            {matchingDecisions.map((decision) => (
+              <a href={`/decisions/${decision.id}`} class="block group">
+                <GlassPanel class="p-6 hover:border-purple-500/30 transition-all">
+                  <div class="flex items-start justify-between gap-4">
+                    <div class="flex-1 min-w-0">
+                      <div class="flex items-center gap-3 mb-2">
+                        <StatusBadge status={decision.data.status} />
+                        <span class="text-xs text-zinc-400 dark:text-zinc-500 font-mono">
+                          <FormattedDate date={decision.data.pubDate} />
+                        </span>
+                      </div>
+                      <h3 class="text-lg font-bold text-zinc-900 dark:text-white group-hover:text-purple-500 transition-colors">
+                        {decision.data.title}
+                      </h3>
+                      <p class="text-sm text-zinc-500 dark:text-zinc-400 mt-1 line-clamp-2">
+                        {decision.data.decision}
+                      </p>
+                    </div>
+                    <svg
+                      class="w-5 h-5 text-zinc-300 dark:text-zinc-600 group-hover:text-purple-500 group-hover:translate-x-1 transition-all shrink-0"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </div>
+                </GlassPanel>
+              </a>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Notes */}
+      {matchingNotes.length > 0 && (
+        <section>
+          <h2 class="text-xs font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest font-mono mb-4">
+            Notes ({matchingNotes.length})
+          </h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {matchingNotes.map((note) => (
+              <a href={`/notes/${note.id}`} class="block group">
+                <GlassPanel class="p-5 h-full hover:border-brand-500/30 transition-all">
+                  <div class="flex items-center gap-2 mb-2">
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
+                      {note.data.type}
+                    </span>
+                    <span class="text-zinc-300 dark:text-zinc-600">·</span>
+                    <span class="text-[10px] text-zinc-400 dark:text-zinc-500 font-mono">
+                      <FormattedDate date={note.data.pubDate} />
+                    </span>
+                  </div>
+                  <h3 class="font-bold text-zinc-900 dark:text-white group-hover:text-brand-500 transition-colors line-clamp-2">
+                    {note.data.title}
+                  </h3>
+                </GlassPanel>
+              </a>
+            ))}
+          </div>
+        </section>
+      )}
+    </div>
+  </div>
+</Layout>
