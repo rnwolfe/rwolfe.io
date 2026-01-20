@@ -4,12 +4,13 @@
 /* ===== CUSTOM THEME (Tailwind v4 CSS-first config) ===== */
 @theme {
   /* Fonts */
-  --font-sans: 'Outfit', ui-sans-serif, system-ui, sans-serif;
-  --font-mono: 'Space Grotesk', ui-monospace, monospace;
+  --font-sans: 'Geist', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, monospace;
 
   /* Brand Colors */
   --color-brand-50: #f0f9ff;
   --color-brand-100: #e0f2fe;
+  --color-brand-400: #38bdf8;
   --color-brand-500: #0ea5e9;
   --color-brand-600: #0284c7;
   --color-brand-900: #0c4a6e;

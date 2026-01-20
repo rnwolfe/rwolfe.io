@@ -14,7 +14,7 @@ const ogImage = Astro.props.ogImage || (Astro.url.pathname !== '/' ? `/og${Astro
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link
-      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Geist+Mono:wght@100..900&display=swap"
       rel="stylesheet"
     />
     <title>{title}</title>
@@ -28,6 +28,18 @@ const ogImage = Astro.props.ogImage || (Astro.url.pathname !== '/' ? `/og${Astro
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description || "Personal website of Ryan Wolfe"} />
     {ogImage && <meta name="twitter:image" content={new URL(ogImage, Astro.site)} />}
+    <script is:inline>
+      // Prevent flash of wrong theme - runs before page renders
+      (function() {
+        const theme = localStorage.getItem('theme') || 
+          (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        if (theme === 'dark') {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      })();
+    </script>
     <ClientRouter />
   </head>
   <body
