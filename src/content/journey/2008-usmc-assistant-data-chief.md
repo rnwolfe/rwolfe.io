@@ -6,7 +6,7 @@ endDate: 2013-04-01
 entryType: role
 company: "United States Marine Corps"
 role: "Assistant Data Chief"
-location: "Jacksonville, North Carolina"
+location: ""
 highlights:
   - "Supervised help desk supporting 2,500+ users"
   - "Led network upgrade projects"

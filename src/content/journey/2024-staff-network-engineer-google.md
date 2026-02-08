@@ -6,7 +6,7 @@ endDate: 2025-04-01
 entryType: role
 company: "Google"
 role: "Staff Network Engineer"
-location: "Reston, Virginia"
+location: ""
 highlights:
   - "Networking, security, and automation"
   - "Google Distributed Cloud"
