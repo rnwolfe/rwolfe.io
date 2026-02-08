@@ -4,91 +4,75 @@ import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 import GlassPanel from '../components/ui/GlassPanel.astro';
 
-// Get the latest project
-const projects = await getCollection('projects');
-projects.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
-const latestProject = projects[0];
+const posts = (await getCollection('blog'))
+  .filter((p) => p.data.status !== 'draft')
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+const latestPost = posts[0];
 
-// Calculate days since publication
-const daysSince = latestProject
-  ? Math.floor((Date.now() - latestProject.data.pubDate.valueOf()) / (1000 * 60 * 60 * 24))
-  : 0;
-const timeAgo =
-  daysSince === 0
-    ? 'Today'
-    : daysSince === 1
-      ? 'Yesterday'
-      : daysSince < 7
-        ? `${daysSince} days ago`
-        : daysSince < 30
-          ? `${Math.floor(daysSince / 7)} weeks ago`
-          : `${Math.floor(daysSince / 30)} months ago`;
+const notes = (await getCollection('notes'))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+const recentNotes = notes.slice(0, 6);
+
+const projects = (await getCollection('projects'))
+  .filter((p) => p.data.status !== 'draft')
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+const hasProjects = projects.length > 0;
+const latestProject = projects[0];
 ---
 
-<Layout title="Ryan Wolfe | Creative Developer">
+<Layout title="Ryan Wolfe" description="Notes on building systems — and the people who build them.">
   <!-- Background Gradients -->
   <div class="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
-    <div
-      class="absolute top-0 left-1/4 w-96 h-96 bg-brand-500/20 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob dark:bg-brand-500/10"
-    >
-    </div>
+    <div class="absolute top-0 left-1/4 w-96 h-96 bg-brand-500/20 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob dark:bg-brand-500/10"></div>
     <div
       class="absolute top-0 right-1/4 w-96 h-96 bg-purple-500/20 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob dark:bg-purple-500/10"
       style="animation-delay: 2s"
-    >
-    </div>
+    ></div>
     <div
       class="absolute -bottom-32 left-1/3 w-96 h-96 bg-pink-500/20 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob dark:bg-pink-500/10"
       style="animation-delay: 4s"
-    >
-    </div>
+    ></div>
   </div>
 
   <div class="bento-grid">
-    <!-- 1. Introduction Card (Large) -->
-    <GlassPanel
-      class="md:col-span-2 h-min p-8 flex flex-col group hover:border-brand-500/30 transition-all duration-300"
-    >
+    <!-- 1) Hero / Positioning -->
+    <GlassPanel class="md:col-span-2 h-min p-8 flex flex-col group hover:border-brand-500/30 transition-all duration-300">
       <div>
-        <div
-          class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-100 dark:bg-brand-900/30 text-brand-600 dark:text-brand-400 text-xs font-semibold mb-6"
-        >
-          <span class="relative flex h-2 w-2">
-            <span
-              class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-400 opacity-75"
-            ></span>
-            <span class="relative inline-flex rounded-full h-2 w-2 bg-brand-500"></span>
-          </span>
-          Open to Work
-        </div>
         <h1 class="text-4xl md:text-6xl font-bold tracking-tight mb-4">
-          Crafting digital <span
-            class="text-transparent bg-clip-text bg-linear-to-r from-brand-500 to-purple-600"
-            >experiences</span
-          > that matter.
+          Notes on building systems —
+          <span class="text-transparent bg-clip-text bg-linear-to-r from-brand-500 to-purple-600">
+            and the people who build them.
+          </span>
         </h1>
-        <p class="text-gray-600 dark:text-gray-400 text-lg max-w-md">
-          Full-stack creative developer specializing in Astro, React, and performance-first
-          architecture.
+        <p class="text-gray-600 dark:text-gray-400 text-lg max-w-xl leading-relaxed">
+          Essays and notes on engineering leadership, developer productivity systems, the builder’s psychology,
+          and occasional Stoic-flavored self-interrogation.
         </p>
       </div>
-      <div class="flex gap-4 mt-8">
+
+      <div class="flex flex-wrap gap-3 mt-8">
         <a
-          href="/projects"
+          href="/start"
           class="px-6 py-3 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-xl font-medium hover:opacity-90 transition-opacity flex items-center gap-2"
         >
-          View Work <Icon name="lucide:arrow-right" class="w-4 h-4" />
+          Start here <Icon name="lucide:arrow-right" class="w-4 h-4" />
         </a>
         <a
-          href="/about"
+          href="/blog"
           class="px-6 py-3 glass-panel border border-gray-200 dark:border-gray-700 rounded-xl font-medium hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
         >
-          Contact Me
+          Read essays
+        </a>
+        <a
+          href="/notes"
+          class="px-6 py-3 glass-panel border border-gray-200 dark:border-gray-700 rounded-xl font-medium hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+        >
+          Browse notes
         </a>
       </div>
     </GlassPanel>
 
-    <!-- 2. Profile / Avatar -->
+    <!-- 2) Profile / Identity (light touch) -->
     <GlassPanel class="md:col-span-1 p-0 relative overflow-hidden group">
       <div class="absolute inset-0">
         <img
@@ -100,90 +84,107 @@ const timeAgo =
       </div>
       <div class="absolute bottom-6 left-6 z-20">
         <h3 class="text-white text-xl font-bold">Ryan Wolfe</h3>
-        <p class="text-gray-200 text-sm">Creative Developer</p>
+        <p class="text-gray-200 text-sm">Creative engineer • writing hub</p>
       </div>
     </GlassPanel>
 
-    <!-- 3. Tech Stack -->
-    <GlassPanel
-      class="md:col-span-1 md:row-span-1 p-6 flex flex-col justify-center overflow-hidden"
-    >
-      <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">Core Stack</h3>
-      <div class="flex gap-4 overflow-x-auto no-scrollbar pb-2">
-        <Icon name="lucide:code-2" class="w-8 h-8 text-orange-500" />
-        <Icon name="lucide:file-json" class="w-8 h-8 text-blue-500" />
-        <Icon name="lucide:wind" class="w-8 h-8 text-cyan-500" />
-        <Icon name="lucide:database" class="w-8 h-8 text-green-500" />
-        <Icon name="lucide:figma" class="w-8 h-8 text-pink-500" />
-        <Icon name="lucide:git-branch" class="w-8 h-8 text-gray-500" />
+    <!-- 3) What I'm thinking about (evergreen-ish) -->
+    <GlassPanel class="md:col-span-1 p-6">
+      <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">Currently thinking about</h3>
+      <ul class="space-y-3 text-gray-700 dark:text-gray-300">
+        <li class="flex gap-3">
+          <span class="mt-1.5 inline-block w-2 h-2 rounded-full bg-brand-500/80 shrink-0"></span>
+          Delegation as identity work (not a task-routing problem)
+        </li>
+        <li class="flex gap-3">
+          <span class="mt-1.5 inline-block w-2 h-2 rounded-full bg-purple-500/80 shrink-0"></span>
+          Productivity systems that reduce anxiety, not just increase throughput
+        </li>
+        <li class="flex gap-3">
+          <span class="mt-1.5 inline-block w-2 h-2 rounded-full bg-pink-500/80 shrink-0"></span>
+          Stoicism applied: control vs influence, and decision-making under ambiguity
+        </li>
+      </ul>
+      <div class="mt-5">
+        <a href="/start" class="text-sm font-medium text-brand-600 dark:text-brand-400 hover:underline">
+          What this site is about →
+        </a>
       </div>
     </GlassPanel>
 
-    <!-- 4. Social Links -->
-    <GlassPanel class="md:col-span-1 md:row-span-1 p-6 flex items-center justify-around">
-      <a
-        href="#"
-        class="p-3 rounded-full hover:bg-brand-50 dark:hover:bg-brand-900/20 text-gray-600 dark:text-gray-400 hover:text-brand-600 dark:hover:text-brand-400 transition-all hover:-translate-y-1"
-      >
-        <Icon name="lucide:github" class="w-6 h-6" />
-      </a>
-      <a
-        href="#"
-        class="p-3 rounded-full hover:bg-blue-50 dark:hover:bg-blue-900/20 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-all hover:-translate-y-1"
-      >
-        <Icon name="lucide:twitter" class="w-6 h-6" />
-      </a>
-      <a
-        href="#"
-        class="p-3 rounded-full hover:bg-blue-50 dark:hover:bg-blue-900/20 text-gray-600 dark:text-gray-400 hover:text-blue-700 dark:hover:text-blue-400 transition-all hover:-translate-y-1"
-      >
-        <Icon name="lucide:linkedin" class="w-6 h-6" />
-      </a>
-      <a
-        href="#"
-        class="p-3 rounded-full hover:bg-red-50 dark:hover:bg-red-900/20 text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-all hover:-translate-y-1"
-      >
-        <Icon name="lucide:mail" class="w-6 h-6" />
-      </a>
-    </GlassPanel>
-
-    <!-- 5. Latest Project -->
-    {latestProject ? (
-      <a href={`/projects/${latestProject.id}`} class="md:col-span-1 md:row-span-1">
+    <!-- 4) Latest essay -->
+    {latestPost ? (
+      <a href={`/blog/${latestPost.id}/`} class="md:col-span-1 md:row-span-1">
         <GlassPanel class="p-6 relative overflow-hidden group cursor-pointer h-full">
-          <div
-            class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity"
-          >
-            <Icon name="lucide:rocket" class="w-24 h-24" />
+          <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+            <Icon name="lucide:book-open" class="w-24 h-24" />
           </div>
-          <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-1">
-            Latest Project
-          </h3>
-          <p class="text-2xl font-bold truncate">{latestProject.data.title}</p>
+          <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-1">Latest essay</h3>
+          <p class="text-2xl font-bold truncate">{latestPost.data.title}</p>
           <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">
-            {latestProject.data.outcomeSummary}
+            {latestPost.data.description}
           </p>
-          <div class="mt-4 flex items-center gap-2 text-sm text-green-600 dark:text-green-400">
-            <Icon name="lucide:check-circle-2" class="w-4 h-4" />
-            <span>Shipped {timeAgo}</span>
+          <div class="mt-4 flex items-center gap-2 text-sm text-brand-600 dark:text-brand-400">
+            <Icon name="lucide:arrow-right" class="w-4 h-4" />
+            <span>Read</span>
           </div>
         </GlassPanel>
       </a>
     ) : (
+      <a href="/blog" class="md:col-span-1 md:row-span-1">
+        <GlassPanel class="p-6 relative overflow-hidden group cursor-pointer h-full">
+          <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+            <Icon name="lucide:pen-line" class="w-24 h-24" />
+          </div>
+          <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-1">Essays</h3>
+          <p class="text-2xl font-bold truncate">Coming soon</p>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">
+            When something is worth publishing, it’ll show up here.
+          </p>
+        </GlassPanel>
+      </a>
+    )}
+
+    <!-- 5) Recent notes -->
+    <a href="/notes" class="md:col-span-1 md:row-span-1">
+      <GlassPanel class="p-6 relative overflow-hidden group cursor-pointer h-full">
+        <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+          <Icon name="lucide:sticky-note" class="w-24 h-24" />
+        </div>
+        <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">Recent notes</h3>
+        {recentNotes.length > 0 ? (
+          <ul class="space-y-2">
+            {recentNotes.map((n) => (
+              <li class="text-sm text-gray-700 dark:text-gray-300 line-clamp-1">
+                <span class="text-gray-400 dark:text-gray-500">•</span> {n.data.title}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p class="text-sm text-gray-500 dark:text-gray-400">Notes coming soon.</p>
+        )}
+        <div class="mt-4 flex items-center gap-2 text-sm text-brand-600 dark:text-brand-400">
+          <Icon name="lucide:arrow-right" class="w-4 h-4" />
+          <span>Browse</span>
+        </div>
+      </GlassPanel>
+    </a>
+
+    <!-- 6) Selected work (only if it exists) -->
+    {hasProjects && latestProject && (
       <a href="/projects" class="md:col-span-1 md:row-span-1">
         <GlassPanel class="p-6 relative overflow-hidden group cursor-pointer h-full">
-          <div
-            class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity"
-          >
-            <Icon name="lucide:cpu" class="w-24 h-24" />
+          <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+            <Icon name="lucide:layers" class="w-24 h-24" />
           </div>
-          <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-1">
-            Latest Deploy
-          </h3>
-          <p class="text-2xl font-bold truncate">Coming Soon</p>
-          <div class="mt-4 flex items-center gap-2 text-sm text-gray-500">
-            <Icon name="lucide:clock" class="w-4 h-4" />
-            <span>Projects in progress</span>
+          <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-1">Selected work</h3>
+          <p class="text-2xl font-bold truncate">{latestProject.data.title}</p>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">
+            {latestProject.data.outcomeSummary}
+          </p>
+          <div class="mt-4 flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+            <Icon name="lucide:arrow-right" class="w-4 h-4" />
+            <span>Browse</span>
           </div>
         </GlassPanel>
       </a>

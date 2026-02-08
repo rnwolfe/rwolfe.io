@@ -20,7 +20,7 @@ import { Icon } from 'astro-icon/components';
     localStorage.setItem('theme', isDark ? 'dark' : 'light');
   };
 
-  document.addEventListener('astro:page-load', () => {
+  const initThemeToggle = () => {
     const theme = (() => {
       if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
         return localStorage.getItem('theme') as string;
@@ -43,5 +43,9 @@ import { Icon } from 'astro-icon/components';
     if (handle) {
       handle.addEventListener('click', handleToggleClick);
     }
-  });
+  };
+
+  // Works both with and without Astro View Transitions
+  document.addEventListener('DOMContentLoaded', initThemeToggle);
+  document.addEventListener('astro:page-load', initThemeToggle);
 </script>

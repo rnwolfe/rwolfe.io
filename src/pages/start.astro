@@ -1,0 +1,57 @@
+---
+import Layout from '../layouts/Layout.astro';
+import GlassPanel from '../components/ui/GlassPanel.astro';
+---
+
+<Layout title="Start here | Ryan Wolfe" description="What I write about and how to use this site.">
+  <div class="max-w-3xl mx-auto py-6 md:py-12">
+    <GlassPanel class="p-8 md:p-12">
+      <div class="inline-block px-3 py-1 rounded-full bg-brand-500/10 text-brand-500 text-xs font-bold font-mono uppercase tracking-widest mb-4">
+        Start here
+      </div>
+
+      <h1 class="text-4xl md:text-5xl font-bold mb-6 leading-tight">
+        What this site is (and isn’t)
+      </h1>
+
+      <div class="prose prose-lg dark:prose-invert max-w-none">
+        <p>
+          I’m Ryan. I build software for a living, but I’m mostly interested in what happens <em>around</em> the code:
+          how good decisions get made, how teams scale, and why smart people still get stuck.
+        </p>
+
+        <p>
+          This isn’t a portfolio disguised as a website. It’s a writing hub.
+          A place for essays and notes about engineering leadership, developer productivity, and the builder’s mind
+          (with occasional Stoic-flavored self-interrogation).
+        </p>
+
+        <h2>How to read this site</h2>
+        <ul>
+          <li><strong><a href="/blog">Blog</a></strong>: longer essays — models, playbooks, and opinions I’m willing to defend.</li>
+          <li><strong><a href="/notes">Notes</a></strong>: shorter, denser fragments — ideas in motion, quotes, TILs, questions.</li>
+          <li><strong><a href="/tags">Tags</a></strong>: if you want to browse by theme instead of chronology.</li>
+        </ul>
+
+        <h2>What I write about</h2>
+        <ul>
+          <li><strong>Engineering leadership</strong>: influence, delegation, judgment, and scaling outcomes beyond your own hands.</li>
+          <li><strong>Developer productivity</strong>: systems (not hacks) for attention, energy, and shipping.</li>
+          <li><strong>Builder psychology</strong>: identity, self-reliance, perfectionism, and the weird incentives in our heads.</li>
+          <li><strong>Stoicism (applied)</strong>: control vs influence, resilience, and virtues as engineering behaviors.</li>
+        </ul>
+
+        <h2>Ground rules</h2>
+        <ul>
+          <li>No proprietary work details. Patterns and lessons, not internal screenshots.</li>
+          <li>Quality over quantity. If nothing is worth publishing, nothing gets published.</li>
+          <li>Practical over performative. If it can’t cash out into behavior, it probably doesn’t belong here.</li>
+        </ul>
+
+        <p>
+          If you’re new: start with the <a href="/blog">latest essay</a>, then fall into the <a href="/notes">notes</a> when you want the unpolished version of my brain.
+        </p>
+      </div>
+    </GlassPanel>
+  </div>
+</Layout>
