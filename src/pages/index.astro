@@ -115,12 +115,12 @@ const latestProject = projects[0];
     <!-- 4) Latest essay -->
     {latestPost ? (
       <a href={`/blog/${latestPost.id}/`} class="md:col-span-1 md:row-span-1">
-        <GlassPanel class="p-6 relative overflow-hidden group cursor-pointer h-full">
+        <GlassPanel class="p-6 relative overflow-hidden group cursor-pointer h-full min-w-0">
           <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
             <Icon name="lucide:book-open" class="w-24 h-24" />
           </div>
           <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-1">Latest essay</h3>
-          <p class="text-2xl font-bold truncate">{latestPost.data.title}</p>
+          <p class="text-2xl font-bold leading-snug line-clamp-2 break-words">{latestPost.data.title}</p>
           <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">
             {latestPost.data.description}
           </p>
@@ -137,7 +137,7 @@ const latestProject = projects[0];
             <Icon name="lucide:pen-line" class="w-24 h-24" />
           </div>
           <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-1">Essays</h3>
-          <p class="text-2xl font-bold truncate">Coming soon</p>
+          <p class="text-2xl font-bold leading-snug">Coming soon</p>
           <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">
             When something is worth publishing, it’ll show up here.
           </p>
