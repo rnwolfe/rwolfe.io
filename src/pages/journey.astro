@@ -18,12 +18,12 @@ const processedEntries = await Promise.all(
   })
 );
 
-const title = "Career Journey | Ryan Wolfe";
-const description = "A timeline of my professional growth, key milestones, and the lessons learned along the way.";
+const title = "Journey | Ryan Wolfe";
+const description = "A running timeline of roles, pivots, and lessons — updated occasionally.";
 ---
 
-<Layout title={title}>
-  <div class="relative min-h-screen pt-20 pb-32">
+<Layout title={title} description={description}>
+  <div class="relative pt-10 md:pt-20 pb-24 md:pb-32">
     {/* Background Decorative Elements */}
     <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-full -z-10 pointer-events-none">
       <div class="absolute top-[10%] left-[10%] w-64 h-64 bg-brand-500/10 rounded-full blur-[120px]"></div>
@@ -50,56 +50,35 @@ const description = "A timeline of my professional growth, key milestones, and t
         </p>
       </header>
 
-      {/* Stats/Overview Glass Panel */}
-      <GlassPanel class="p-8 mb-24 border-zinc-200 dark:border-white/5 bg-zinc-50/50 dark:bg-white/2 backdrop-blur-md">
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
-          <div class="space-y-1">
-            <span class="text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-widest">Experience</span>
-            <p class="text-2xl font-bold text-zinc-900 dark:text-zinc-100 font-mono">8+ Years</p>
-          </div>
-          <div class="space-y-1">
-            <span class="text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-widest">Roles</span>
-            <p class="text-2xl font-bold text-zinc-900 dark:text-zinc-100 font-mono">4 Major</p>
-          </div>
-          <div class="space-y-1">
-            <span class="text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-widest">Tech Stack</span>
-            <p class="text-2xl font-bold text-zinc-900 dark:text-zinc-100 font-mono">Polyglot</p>
-          </div>
-          <div class="space-y-1">
-            <span class="text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-widest">Focus</span>
-            <p class="text-2xl font-bold text-zinc-900 dark:text-zinc-100 font-mono">System Arch</p>
-          </div>
-        </div>
-      </GlassPanel>
-
       {/* Timeline Section */}
-      <div class="relative space-y-4">
-        {processedEntries.map(({ data, Content, resolvedProjects }) => (
-          <TimelineEntry
-            date={data.date}
-            endDate={data.endDate}
-            title={data.title}
-            entryType={data.entryType}
-            highlights={data.highlights}
-            company={data.company}
-            role={data.role}
-            location={data.location}
-            tech={data.tech}
-            relatedProjects={resolvedProjects}
-          >
-            <Content />
-          </TimelineEntry>
-        ))}
-      </div>
-
-      {/* End of Journey Marker */}
-      <div class="mt-20 flex flex-col items-center text-center space-y-4">
-        <div class="w-px h-24 bg-linear-to-b from-zinc-200 dark:from-zinc-800 to-transparent"></div>
-        <div class="p-4 rounded-full bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-400 dark:text-zinc-500">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6"><path d="M12 2v20"/><path d="m17 17-5 5-5-5"/></svg>
+      {processedEntries.length > 0 ? (
+        <div class="relative space-y-4">
+          {processedEntries.map(({ data, Content, resolvedProjects }) => (
+            <TimelineEntry
+              date={data.date}
+              endDate={data.endDate}
+              title={data.title}
+              entryType={data.entryType}
+              highlights={data.highlights}
+              company={data.company}
+              role={data.role}
+              location={data.location}
+              tech={data.tech}
+              relatedProjects={resolvedProjects}
+            >
+              <Content />
+            </TimelineEntry>
+          ))}
         </div>
-        <p class="text-zinc-500 dark:text-zinc-400 font-medium italic">To be continued...</p>
-      </div>
+      ) : (
+        <GlassPanel class="p-8 md:p-10 border-zinc-200 dark:border-white/5 bg-zinc-50/50 dark:bg-white/2 backdrop-blur-md">
+          <h2 class="text-xl font-bold mb-2 text-zinc-900 dark:text-white">No entries yet</h2>
+          <p class="text-zinc-600 dark:text-zinc-400 leading-relaxed">
+            I’m rebuilding this site around writing first. I’ll add the journey timeline back as I curate it.
+            For now, <a class="text-brand-600 dark:text-brand-400 hover:underline" href="/start">Start here</a> is the best entry point.
+          </p>
+        </GlassPanel>
+      )
     </div>
   </div>
 </Layout>
