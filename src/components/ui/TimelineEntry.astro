@@ -30,6 +30,9 @@ const {
   class: className 
 } = Astro.props;
 
+const showRole = Boolean(role && role.trim() && role.trim() !== title.trim());
+const showCompanyLine = Boolean(company || showRole);
+
 const typeConfigs = {
   role: {
     color: 'bg-brand-500',
@@ -96,10 +99,10 @@ const formatDate = (d: Date) => {
       <h3 class="text-xl font-bold text-zinc-800 dark:text-zinc-100 font-sans group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">
         {title}
       </h3>
-      {(company || role) && (
+      {showCompanyLine && (
         <div class="flex items-center gap-2 text-zinc-500 dark:text-zinc-400 font-medium">
-          {role && <span>{role}</span>}
-          {role && company && <span class="text-zinc-300 dark:text-zinc-600">•</span>}
+          {showRole && <span>{role}</span>}
+          {showRole && company && <span class="text-zinc-300 dark:text-zinc-600">•</span>}
           {company && <span class="text-brand-600 dark:text-brand-300/80">{company}</span>}
           {location && <span class="text-zinc-400 dark:text-zinc-600 ml-1">({location})</span>}
         </div>
