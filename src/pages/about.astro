@@ -8,30 +8,46 @@ import GlassPanel from '../components/ui/GlassPanel.astro';
   <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
     <GlassPanel class="md:col-span-2 p-8">
       <h1 class="text-4xl font-bold mb-6">About</h1>
-      <div class="prose dark:prose-invert max-w-none">
-        <p class="text-lg text-gray-600 dark:text-gray-300 mb-4">
-          I’m Ryan. I’m a creative engineer who likes performance, clean interfaces, and systems that actually survive contact with reality.
+      <div class="prose prose-lg dark:prose-invert max-w-none">
+        <p>
+          I’m Ryan — a staff engineer. I’m drawn to the messy boundary where software meets reality:
+          systems, tradeoffs, and the human behaviors that quietly determine whether the technical stuff works.
         </p>
-        <p class="text-gray-600 dark:text-gray-300 mb-4">
-          These days I write about engineering leadership, developer productivity systems, and the builder’s psychology — the soft stuff that quietly determines whether the hard stuff works.
+
+        <p>
+          In my day job I’m focused on infrastructure programmability and automation.
+          Outside of that, I write about engineering leadership, developer productivity systems,
+          and the builder’s psychology — the “soft” skills that are usually just unpriced technical risk.
         </p>
-        <p class="text-gray-600 dark:text-gray-300">
-          If you’re trying to figure out what this site is, start with <a href="/start">Start here</a>.
+
+        <p>
+          This site is a writing hub. If you want the guided tour, start with <a href="/start">Start here</a>.
+          If you want the unpolished version of my brain, <a href="/notes">Notes</a> is where things go to ferment.
+        </p>
+
+        <h2>What I optimize for</h2>
+        <ul>
+          <li><strong>Leverage</strong> (outcomes over activity)</li>
+          <li><strong>Clarity</strong> (models, constraints, and definitions of done)</li>
+          <li><strong>Craft</strong> (quality without martyrdom)</li>
+        </ul>
+
+        <p class="text-sm text-zinc-500 dark:text-zinc-400">
+          TODO: Add 2–3 lines about your specific staff-level focus areas (keep it high-level / non-proprietary).
         </p>
       </div>
     </GlassPanel>
 
     <GlassPanel class="p-8 flex flex-col justify-center items-center text-center">
       <div class="w-32 h-32 bg-gray-200 dark:bg-gray-800 rounded-full mb-6 overflow-hidden">
-        <img
-          src="/profile.jpeg"
-          alt="Profile"
-          class="w-full h-full object-cover"
-        />
+        <img src="/profile.jpeg" alt="Profile" class="w-full h-full object-cover" />
       </div>
       <h3 class="text-xl font-bold mb-1">Contact</h3>
       <p class="text-gray-500 text-sm mb-6">If you want to reach me, email is best.</p>
-      <a href="/contact" class="w-full py-3 bg-brand-600 hover:bg-brand-700 text-white rounded-xl font-medium transition-colors flex items-center justify-center gap-2">
+      <a
+        href="/contact"
+        class="w-full py-3 bg-brand-600 hover:bg-brand-700 text-white rounded-xl font-medium transition-colors flex items-center justify-center gap-2"
+      >
         <Icon name="lucide:mail" class="w-4 h-4" />
         Contact
       </a>
@@ -39,44 +55,20 @@ import GlassPanel from '../components/ui/GlassPanel.astro';
   </div>
 
   <GlassPanel class="mt-6 p-8">
-    <h2 class="text-2xl font-bold mb-8">Technical Arsenal</h2>
-    
-    <div class="space-y-8">
-      <div>
-        <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">Frontend</h3>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div class="p-4 bg-gray-50 dark:bg-white/5 rounded-xl border border-gray-200 dark:border-white/10 flex items-center gap-3">
-            <div class="w-2 h-2 rounded-full bg-orange-500"></div> Astro 5
-          </div>
-          <div class="p-4 bg-gray-50 dark:bg-white/5 rounded-xl border border-gray-200 dark:border-white/10 flex items-center gap-3">
-            <div class="w-2 h-2 rounded-full bg-blue-500"></div> React
-          </div>
-          <div class="p-4 bg-gray-50 dark:bg-white/5 rounded-xl border border-gray-200 dark:border-white/10 flex items-center gap-3">
-            <div class="w-2 h-2 rounded-full bg-blue-400"></div> TypeScript
-          </div>
-          <div class="p-4 bg-gray-50 dark:bg-white/5 rounded-xl border border-gray-200 dark:border-white/10 flex items-center gap-3">
-            <div class="w-2 h-2 rounded-full bg-cyan-400"></div> Tailwind
-          </div>
-        </div>
-      </div>
+    <h2 class="text-2xl font-bold mb-3">Quick facts</h2>
+    <p class="text-gray-600 dark:text-gray-400 mb-6">
+      A few things that are true, without turning this into a resume.
+    </p>
 
-      <div>
-        <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">Backend & Tools</h3>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div class="p-4 bg-gray-50 dark:bg-white/5 rounded-xl border border-gray-200 dark:border-white/10 flex items-center gap-3">
-            <div class="w-2 h-2 rounded-full bg-green-500"></div> Node.js
-          </div>
-          <div class="p-4 bg-gray-50 dark:bg-white/5 rounded-xl border border-gray-200 dark:border-white/10 flex items-center gap-3">
-            <div class="w-2 h-2 rounded-full bg-yellow-500"></div> Firebase
-          </div>
-          <div class="p-4 bg-gray-50 dark:bg-white/5 rounded-xl border border-gray-200 dark:border-white/10 flex items-center gap-3">
-            <div class="w-2 h-2 rounded-full bg-white dark:bg-gray-400"></div> Next.js
-          </div>
-          <div class="p-4 bg-gray-50 dark:bg-white/5 rounded-xl border border-gray-200 dark:border-white/10 flex items-center gap-3">
-            <div class="w-2 h-2 rounded-full bg-purple-500"></div> Vite
-          </div>
-        </div>
-      </div>
-    </div>
+    <ul class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm text-gray-700 dark:text-gray-300">
+      <li class="glass-panel p-4 rounded-xl">Staff Software Engineer @ Google</li>
+      <li class="glass-panel p-4 rounded-xl">Background in network/security + automation</li>
+      <li class="glass-panel p-4 rounded-xl">Former US Marine Corps (IT / operations)</li>
+      <li class="glass-panel p-4 rounded-xl">Writing first: essays + notes</li>
+    </ul>
+
+    <p class="text-sm text-zinc-500 dark:text-zinc-400 mt-6">
+      TODO: Confirm whether you want Google location phrased as “DC area” vs “Reston, VA” for current role.
+    </p>
   </GlassPanel>
 </Layout>
