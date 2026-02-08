@@ -191,7 +191,6 @@ async function markNotionPublished(pageId) {
     body: {
       properties: {
         Published: { checkbox: true },
-        Triaged: { checkbox: true },
       },
     },
   });
