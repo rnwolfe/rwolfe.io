@@ -4,19 +4,19 @@ import Layout from '../layouts/Layout.astro';
 import GlassPanel from '../components/ui/GlassPanel.astro';
 ---
 
-<Layout title="About | Ryan Wolfe">
+<Layout title="About | Ryan Wolfe" description="A little context, minus the portfolio theater.">
   <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
     <GlassPanel class="md:col-span-2 p-8">
-      <h1 class="text-4xl font-bold mb-6">About Me</h1>
+      <h1 class="text-4xl font-bold mb-6">About</h1>
       <div class="prose dark:prose-invert max-w-none">
         <p class="text-lg text-gray-600 dark:text-gray-300 mb-4">
-          I'm Ryan, a creative developer obsessed with performance and interaction design. I believe the web should be fast, accessible, and delightful.
+          I’m Ryan. I’m a creative engineer who likes performance, clean interfaces, and systems that actually survive contact with reality.
         </p>
         <p class="text-gray-600 dark:text-gray-300 mb-4">
-          My journey started with exploring the View Source of Geocities sites, and now I'm building scalable applications using the bleeding edge of the JavaScript ecosystem.
+          These days I write about engineering leadership, developer productivity systems, and the builder’s psychology — the soft stuff that quietly determines whether the hard stuff works.
         </p>
         <p class="text-gray-600 dark:text-gray-300">
-          When I'm not coding, you can find me hiking, making coffee, or tinkering with home automation.
+          If you’re trying to figure out what this site is, start with <a href="/start">Start here</a>.
         </p>
       </div>
     </GlassPanel>
@@ -29,12 +29,12 @@ import GlassPanel from '../components/ui/GlassPanel.astro';
           class="w-full h-full object-cover"
         />
       </div>
-      <h3 class="text-xl font-bold mb-1">Let's Connect</h3>
-      <p class="text-gray-500 text-sm mb-6">Open for freelance opportunities.</p>
-      <button class="w-full py-3 bg-brand-600 hover:bg-brand-700 text-white rounded-xl font-medium transition-colors flex items-center justify-center gap-2">
+      <h3 class="text-xl font-bold mb-1">Contact</h3>
+      <p class="text-gray-500 text-sm mb-6">If you want to reach me, email is best.</p>
+      <a href="/contact" class="w-full py-3 bg-brand-600 hover:bg-brand-700 text-white rounded-xl font-medium transition-colors flex items-center justify-center gap-2">
         <Icon name="lucide:mail" class="w-4 h-4" />
-        Copy Email
-      </button>
+        Contact
+      </a>
     </GlassPanel>
   </div>
 

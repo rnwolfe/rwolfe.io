@@ -71,9 +71,17 @@
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(0, 0, 0, 0.05);
-  position: relative;
   overflow: hidden;
   transition: border-color 0.3s ease;
+}
+
+/*
+  IMPORTANT: Don’t force position:relative on every glass-panel.
+  Some panels intentionally use Tailwind position utilities (fixed/sticky/absolute).
+  If we override them, the element re-enters normal flow and can create massive whitespace.
+*/
+.glass-panel:not(.fixed):not(.absolute):not(.sticky) {
+  position: relative;
 }
 
 .dark .glass-panel {

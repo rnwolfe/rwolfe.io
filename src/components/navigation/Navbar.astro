@@ -2,18 +2,20 @@
 import { Icon } from 'astro-icon/components';
 import ThemeToggle from '../ui/ThemeToggle.astro';
 
+import { getCollection } from 'astro:content';
+
+const projects = await getCollection('projects');
+const hasProjects = projects.length > 0;
+
 const navItems = [
-  {
-    label: 'Home',
-    href: '/',
-  },
+  { label: 'Home', href: '/' },
   {
     label: 'Writing',
-    href: '/blog',
+    href: '/start',
     children: [
+      { label: 'Start', href: '/start' },
       { label: 'Blog', href: '/blog' },
       { label: 'Notes', href: '/notes' },
-      { label: 'Projects', href: '/projects' },
       { label: 'Tags', href: '/tags' },
     ],
   },
@@ -22,13 +24,16 @@ const navItems = [
     href: '/about',
     children: [
       { label: 'Journey', href: '/journey' },
+      { label: 'About', href: '/about' },
       { label: 'Uses', href: '/uses' },
+      { label: 'Contact', href: '/contact' },
     ],
   },
+  ...(hasProjects ? [{ label: 'Selected Work', href: '/projects' }] : []),
 ];
 ---
 
-<nav class="glass-panel !overflow-visible p-4 mb-12 flex justify-between items-center sticky top-4 z-50 rounded-2xl">
+<nav class="glass-panel !overflow-visible p-4 mb-6 md:mb-12 flex justify-between items-center sticky top-4 z-50 rounded-2xl">
   <a href="/" class="text-xl font-bold font-mono flex items-center gap-2 hover:text-brand-600 transition-colors group">
     <Icon name="lucide:terminal" class="w-6 h-6 text-brand-500 group-hover:rotate-12 transition-transform" />
     <span id="logo-text" data-value="rwolfe.io">rwolfe.io</span>
@@ -115,7 +120,7 @@ const navItems = [
 <script>
   const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
-  document.addEventListener('astro:page-load', () => {
+  const initNavbar = () => {
     // Logo scramble effect
     const element = document.getElementById('logo-text') as HTMLElement | null;
     if (element) {
@@ -147,25 +152,29 @@ const navItems = [
     // Mobile menu toggle
     const mobileMenuBtn = document.getElementById('mobile-menu-btn');
     const mobileMenu = document.getElementById('mobile-menu');
-    
+
     if (mobileMenuBtn && mobileMenu) {
       mobileMenuBtn.addEventListener('click', () => {
         mobileMenu.classList.toggle('open');
       });
-      
+
       // Close menu when clicking outside
       document.addEventListener('click', (e) => {
         if (!mobileMenu.contains(e.target as Node) && !mobileMenuBtn.contains(e.target as Node)) {
           mobileMenu.classList.remove('open');
         }
       });
-      
+
       // Close menu on navigation
-      mobileMenu.querySelectorAll('a').forEach(link => {
+      mobileMenu.querySelectorAll('a').forEach((link) => {
         link.addEventListener('click', () => {
           mobileMenu.classList.remove('open');
         });
       });
     }
-  });
+  };
+
+  // Works both with and without Astro View Transitions
+  document.addEventListener('DOMContentLoaded', initNavbar);
+  document.addEventListener('astro:page-load', initNavbar);
 </script>

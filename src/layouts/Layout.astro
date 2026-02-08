@@ -47,13 +47,13 @@ const ogImage = Astro.props.ogImage || (Astro.url.pathname !== '/' ? `/og${Astro
   >
     <NoiseOverlay />
 
-    <main class="max-w-7xl mx-auto px-4 py-8">
+    <main class="max-w-7xl mx-auto px-4 py-6 md:py-8">
       <Navbar />
       <slot />
     </main>
 
     <script>
-      document.addEventListener('astro:page-load', () => {
+      const initSpotlight = () => {
         const panels = document.querySelectorAll('.glass-panel');
 
         document.addEventListener('mousemove', (e) => {
@@ -65,7 +65,11 @@ const ogImage = Astro.props.ogImage || (Astro.url.pathname !== '/' ? `/og${Astro
             (panel as HTMLElement).style.setProperty('--mouse-y', `${y}px`);
           });
         });
-      });
+      };
+
+      // Works both with and without Astro View Transitions
+      document.addEventListener('DOMContentLoaded', initSpotlight);
+      document.addEventListener('astro:page-load', initSpotlight);
     </script>
   </body>
 </html>
