@@ -6,7 +6,7 @@ endDate: 2024-04-01
 entryType: role
 company: "Google"
 role: "Senior Network Engineer"
-location: "Reston, Virginia"
+location: ""
 highlights:
   - "Networking, security, and automation"
 tech: []

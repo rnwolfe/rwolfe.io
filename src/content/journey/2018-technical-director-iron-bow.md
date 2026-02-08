@@ -6,7 +6,7 @@ endDate: 2022-06-01
 entryType: role
 company: "Iron Bow Technologies"
 role: "Technical Director, Programmability and Automation"
-location: "Washington DC-Baltimore Area"
+location: ""
 highlights:
   - "Automation and programmability solutions"
   - "DevOps & DevSecOps initiatives"
