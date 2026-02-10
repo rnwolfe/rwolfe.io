@@ -1,6 +1,6 @@
 ---
 title: "Assistant Data Chief"
-description: "Enterprise IT operations + large network work; supervised help desk operations."
+description: "Managed medium-sized enterprise infrastructure (networking, enterprise apps, domain infrastructure)."
 date: 2008-07-01
 endDate: 2013-04-01
 entryType: role
@@ -8,11 +8,13 @@ company: "United States Marine Corps"
 role: "Assistant Data Chief"
 location: ""
 highlights:
-  - "Supervised help desk supporting 2,500+ users"
-  - "Led network upgrade projects"
-  - "Built/maintained enterprise networks"
+  - "Managed medium-sized enterprise infrastructure"
+  - "Networking, enterprise applications, and domain infrastructure"
+  - "Learned (a lot) about myself and others under pressure"
 tech: ["Active Directory", "Networking"]
 relatedProjects: []
 ---
 
-TODO: Add a short paragraph about what this period shaped in you (self-reliance, standards, delegation).
+Marine Corps framing aside, this was hands-on ownership of medium-sized enterprise infrastructure: networking, enterprise applications, and domain infrastructure.
+
+This period taught me more lessons about myself and other people than I could count — some good, some bad, some lifelong. Self-reliance and competence became armor.
