@@ -34,6 +34,8 @@ function parseArgs(argv) {
     branchPrefix: 'notion-notes',
     verbose: false,
     requireReflection: true,
+    ids: null, // comma-separated Notion page ids
+    markReviewed: false, // mark surfaced items as Reviewed=true (does NOT publish)
   };
   for (let i = 2; i < argv.length; i++) {
     const a = argv[i];
@@ -44,6 +46,8 @@ function parseArgs(argv) {
     else if (a === '--branch-prefix') out.branchPrefix = argv[++i] ?? out.branchPrefix;
     else if (a === '--require-reflection') out.requireReflection = true;
     else if (a === '--no-require-reflection') out.requireReflection = false;
+    else if (a === '--ids') out.ids = String(argv[++i] ?? '').split(',').map((s) => s.trim()).filter(Boolean);
+    else if (a === '--mark-reviewed') out.markReviewed = true;
     else throw new Error(`Unknown arg: ${a}`);
   }
   return out;
@@ -114,24 +118,54 @@ async function ensurePublishedProperty(dsId) {
   });
 }
 
+async function ensureReviewedProperty(dsId) {
+  const ds = await notionFetch(`https://api.notion.com/v1/data_sources/${dsId}`);
+  if (ds.properties?.Reviewed?.type === 'checkbox') return;
+  await notionFetch(`https://api.notion.com/v1/data_sources/${dsId}`, {
+    method: 'PATCH',
+    body: { properties: { Reviewed: { checkbox: {} } } },
+  });
+}
+
 async function queryUntriaged(dsId, limit, { requireReflection }) {
-  const and = [
+  const baseAnd = [
     { property: 'Triaged', checkbox: { equals: false } },
     { property: 'URL', url: { is_not_empty: true } },
   ];
-  if (requireReflection) {
-    and.push({ property: 'Reflection', rich_text: { is_not_empty: true } });
-  }
 
-  const q = await notionFetch(`https://api.notion.com/v1/data_sources/${dsId}/query`, {
-    method: 'POST',
-    body: {
-      page_size: limit,
-      filter: { and },
-      sorts: [{ property: 'Created time', direction: 'descending' }],
-    },
+  const withReviewed = [
+    ...baseAnd,
+    // Avoid resurfacing items that have already been surfaced by heartbeat.
+    { property: 'Reviewed', checkbox: { equals: false } },
+  ];
+
+  const addReflection = (and) => {
+    if (requireReflection) and.push({ property: 'Reflection', rich_text: { is_not_empty: true } });
+    return and;
+  };
+
+  const bodyFor = (and) => ({
+    page_size: limit,
+    filter: { and },
+    sorts: [{ property: 'Created time', direction: 'descending' }],
   });
-  return q.results;
+
+  try {
+    const q = await notionFetch(`https://api.notion.com/v1/data_sources/${dsId}/query`, {
+      method: 'POST',
+      body: bodyFor(addReflection(withReviewed)),
+    });
+    return q.results;
+  } catch (e) {
+    // If the data source doesn't have Reviewed yet, fall back gracefully.
+    const msg = String(e?.message || e);
+    if (!msg.includes('Could not find property') || !msg.includes('Reviewed')) throw e;
+    const q = await notionFetch(`https://api.notion.com/v1/data_sources/${dsId}/query`, {
+      method: 'POST',
+      body: bodyFor(addReflection(baseAnd)),
+    });
+    return q.results;
+  }
 }
 
 function mdForItem({ title, url, source, reflection }) {
@@ -207,6 +241,17 @@ async function markNotionPublished(pageId) {
   });
 }
 
+async function markNotionReviewed(pageId) {
+  await notionFetch(`https://api.notion.com/v1/pages/${pageId}`, {
+    method: 'PATCH',
+    body: {
+      properties: {
+        Reviewed: { checkbox: true },
+      },
+    },
+  });
+}
+
 async function main() {
   const opts = parseArgs(process.argv);
   const dryRun = !opts.apply;
@@ -215,14 +260,23 @@ async function main() {
 
   if (!dryRun) {
     await ensurePublishedProperty(dsId);
+    await ensureReviewedProperty(dsId);
     await requireCleanTree();
+  } else if (opts.markReviewed) {
+    // Heartbeat mode: allow marking Reviewed without publishing.
+    await ensureReviewedProperty(dsId);
   }
 
-  const items = await queryUntriaged(dsId, opts.limit, { requireReflection: opts.requireReflection });
+  let items = await queryUntriaged(dsId, opts.limit, { requireReflection: opts.requireReflection });
+  if (opts.ids?.length) {
+    const set = new Set(opts.ids);
+    items = items.filter((it) => set.has(it.id));
+  }
+
   if (items.length === 0) {
     console.log(opts.requireReflection
-      ? 'No publishable inbox items (needs URL + Triaged=false + Reflection not empty).'
-      : 'No untriaged inbox items with URL.'
+      ? 'No publishable inbox items (needs URL + Triaged=false + Reviewed=false + Reflection not empty).'
+      : 'No untriaged inbox items with URL (needs URL + Triaged=false + Reviewed=false).'
     );
     return;
   }
@@ -264,7 +318,15 @@ async function main() {
 
   planned.forEach((p) => console.log(`- ${p.title} -> ${path.relative(ROOT, p.outPath)}`));
 
-  if (dryRun) return;
+  if (dryRun) {
+    if (opts.markReviewed) {
+      for (const p of planned) {
+        await markNotionReviewed(p.id);
+      }
+      console.log(`Marked ${planned.length} item(s) Reviewed.`);
+    }
+    return;
+  }
 
   await fs.mkdir(NOTES_DIR, { recursive: true });
   await createBranch(branchName);
