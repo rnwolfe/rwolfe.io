@@ -28,7 +28,13 @@ const ROOT = path.resolve(process.cwd());
 const NOTES_DIR = path.join(ROOT, 'src/content/notes');
 
 function parseArgs(argv) {
-  const out = { apply: false, limit: 10, branchPrefix: 'notion-notes', verbose: false };
+  const out = {
+    apply: false,
+    limit: 10,
+    branchPrefix: 'notion-notes',
+    verbose: false,
+    requireReflection: true,
+  };
   for (let i = 2; i < argv.length; i++) {
     const a = argv[i];
     if (a === '--apply') out.apply = true;
@@ -36,6 +42,8 @@ function parseArgs(argv) {
     else if (a === '--verbose') out.verbose = true;
     else if (a === '--limit') out.limit = Number(argv[++i] ?? out.limit);
     else if (a === '--branch-prefix') out.branchPrefix = argv[++i] ?? out.branchPrefix;
+    else if (a === '--require-reflection') out.requireReflection = true;
+    else if (a === '--no-require-reflection') out.requireReflection = false;
     else throw new Error(`Unknown arg: ${a}`);
   }
   return out;
@@ -106,24 +114,27 @@ async function ensurePublishedProperty(dsId) {
   });
 }
 
-async function queryUntriaged(dsId, limit) {
+async function queryUntriaged(dsId, limit, { requireReflection }) {
+  const and = [
+    { property: 'Triaged', checkbox: { equals: false } },
+    { property: 'URL', url: { is_not_empty: true } },
+  ];
+  if (requireReflection) {
+    and.push({ property: 'Reflection', rich_text: { is_not_empty: true } });
+  }
+
   const q = await notionFetch(`https://api.notion.com/v1/data_sources/${dsId}/query`, {
     method: 'POST',
     body: {
       page_size: limit,
-      filter: {
-        and: [
-          { property: 'Triaged', checkbox: { equals: false } },
-          { property: 'URL', url: { is_not_empty: true } },
-        ],
-      },
+      filter: { and },
       sorts: [{ property: 'Created time', direction: 'descending' }],
     },
   });
   return q.results;
 }
 
-function mdForItem({ title, url, source }) {
+function mdForItem({ title, url, source, reflection }) {
   const date = todayISO();
   const host = hostname(url);
   const inferredSource = source || host;
@@ -135,6 +146,9 @@ function mdForItem({ title, url, source }) {
 
   const uniqTags = [...new Set(tags)];
 
+  const body = (reflection || '').trim();
+  if (!body) throw new Error('Missing reflection text');
+
   return `---\n` +
     `title: "${title.replace(/"/g, '\\"')}"\n` +
     `pubDate: ${date}\n` +
@@ -145,10 +159,7 @@ function mdForItem({ title, url, source }) {
     `relatedProjects: []\n` +
     `relatedPosts: []\n` +
     `---\n\n` +
-    `TODO: Write a 3–6 sentence note (not a summary).\n` +
-    `- What’s the punchline?\n` +
-    `- Why does it matter?\n` +
-    `- What’s the constraint/tradeoff?\n`;
+    `${body}\n`;
 }
 
 async function git(cmd, args) {
@@ -207,9 +218,12 @@ async function main() {
     await requireCleanTree();
   }
 
-  const items = await queryUntriaged(dsId, opts.limit);
+  const items = await queryUntriaged(dsId, opts.limit, { requireReflection: opts.requireReflection });
   if (items.length === 0) {
-    console.log('No untriaged inbox items with URL.');
+    console.log(opts.requireReflection
+      ? 'No publishable inbox items (needs URL + Triaged=false + Reflection not empty).'
+      : 'No untriaged inbox items with URL.'
+    );
     return;
   }
 
@@ -224,6 +238,10 @@ async function main() {
     const title = it.properties?.Title?.title?.[0]?.plain_text || '(untitled)';
     const url = it.properties?.URL?.url;
     const source = it.properties?.Source?.select?.name || '';
+    const reflection = (it.properties?.Reflection?.rich_text || [])
+      .map((rt) => rt.plain_text)
+      .join('')
+      .trim();
     const id = it.id;
 
     const baseSlug = slugify(title);
@@ -241,7 +259,7 @@ async function main() {
       }
     }
 
-    planned.push({ id, title, url, outPath });
+    planned.push({ id, title, url, reflection, outPath });
   }
 
   planned.forEach((p) => console.log(`- ${p.title} -> ${path.relative(ROOT, p.outPath)}`));
@@ -253,7 +271,7 @@ async function main() {
 
   for (const p of planned) {
     const src = hostname(p.url);
-    const md = mdForItem({ title: p.title, url: p.url, source: src });
+    const md = mdForItem({ title: p.title, url: p.url, source: src, reflection: p.reflection });
     await fs.writeFile(p.outPath, md, 'utf8');
   }
 
