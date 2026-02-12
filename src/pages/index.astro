@@ -36,7 +36,7 @@ const latestProject = projects[0];
 
   <div class="bento-grid">
     <!-- 1) Hero / Positioning -->
-    <GlassPanel class="md:col-span-2 h-min p-8 flex flex-col group hover:border-brand-500/30 transition-all duration-300">
+    <GlassPanel class="md:col-span-3 h-min p-8 flex flex-col group hover:border-brand-500/30 transition-all duration-300">
       <div>
         <h1 class="text-4xl md:text-6xl font-bold tracking-tight mb-4">
           Notes on building systems —
@@ -69,22 +69,6 @@ const latestProject = projects[0];
         >
           Browse notes
         </a>
-      </div>
-    </GlassPanel>
-
-    <!-- 2) Profile / Identity (light touch) -->
-    <GlassPanel class="md:col-span-1 p-0 relative overflow-hidden group">
-      <div class="absolute inset-0">
-        <img
-          src="/profile.jpeg"
-          alt="Profile"
-          class="w-full h-full object-cover rounded-2xl transition-transform duration-700 group-hover:scale-105"
-        />
-        <div class="absolute inset-0 bg-linear-to-b from-transparent to-black/60 rounded-2xl"></div>
-      </div>
-      <div class="absolute bottom-6 left-6 z-20">
-        <h3 class="text-white text-xl font-bold">Ryan Wolfe</h3>
-        <p class="text-gray-200 text-sm">Creative engineer • writing hub</p>
       </div>
     </GlassPanel>
 
@@ -121,9 +105,7 @@ const latestProject = projects[0];
           </div>
           <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-1">Latest essay</h3>
           <p class="text-2xl font-bold leading-snug line-clamp-2 break-words">{latestPost.data.title}</p>
-          <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">
-            {latestPost.data.description}
-          </p>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">{latestPost.data.description}</p>
           <div class="mt-4 flex items-center gap-2 text-sm text-brand-600 dark:text-brand-400">
             <Icon name="lucide:arrow-right" class="w-4 h-4" />
             <span>Read</span>
@@ -179,9 +161,7 @@ const latestProject = projects[0];
           </div>
           <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-1">Selected work</h3>
           <p class="text-2xl font-bold truncate">{latestProject.data.title}</p>
-          <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">
-            {latestProject.data.outcomeSummary}
-          </p>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">{latestProject.data.outcomeSummary}</p>
           <div class="mt-4 flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
             <Icon name="lucide:arrow-right" class="w-4 h-4" />
             <span>Browse</span>
