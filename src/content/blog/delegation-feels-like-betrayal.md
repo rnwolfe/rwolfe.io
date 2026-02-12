@@ -1,6 +1,7 @@
 ---
 title: "Why delegation feels like betrayal (and how to do it anyway)"
 description: "Delegation is a loaded word. If it feels emotional, that’s because it touches identity—competence, control, and self-reliance. Here’s a model and a playbook." 
+heroImage: "/public/images/posts/delegation-headline.png"
 pubDate: 2026-02-03
 status: completed
 tags: ["leadership", "delegation", "psychology", "staff-engineering", "productivity"]
