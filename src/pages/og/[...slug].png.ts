@@ -11,7 +11,7 @@ export async function getStaticPaths() {
     const notes = await getCollection('notes');
 
     const entries = [
-        { params: { slug: 'home' }, props: { title: 'Creative Developer & Architect', type: 'Ryan Wolfe' } },
+        { params: { slug: 'home' }, props: { title: 'Builder, Engineer, Writer', type: 'Ryan Wolfe' } },
         ...blog.map(post => ({ params: { slug: `blog/${post.id}` }, props: { title: post.data.title, type: 'Blog' } })),
         ...projects.map(project => ({ params: { slug: `projects/${project.id}` }, props: { title: project.data.title, type: 'Project' } })),
         ...decisions.map(decision => ({ params: { slug: `decisions/${decision.id}` }, props: { title: decision.data.title, type: 'Decision' } })),
@@ -142,7 +142,7 @@ export async function GET({ props }: { props: { title: string; type: string } })
                                             fontSize: '20px',
                                             color: '#52525b',
                                         },
-                                        children: 'Ryan Wolfe — Senior Software Engineer',
+                                        children: 'Ryan Wolfe — Staff Software Engineer',
                                     },
                                 },
                             ],
