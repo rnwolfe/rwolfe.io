@@ -1,6 +1,6 @@
 ---
 title: "[2501.13956] Zep: A Temporal Knowledge Graph Architecture for Agent Memory"
-pubDate: 2026-04-07
+pubDate: 2026-04-14
 type: bookmark
 tags: ["bookmark", "ai", "agents"]
 source: "arxiv.org"
@@ -9,4 +9,4 @@ relatedProjects: []
 relatedPosts: []
 ---
 
-The paper frames memory as a temporal graph built on top of Graphiti, then evaluates it against DMR and LongMemEval. The core claim: memory isn’t just retrieval; it’s dynamic synthesis of conversational + structured business data over time. The reported gains (higher accuracy and lower latency) suggest the graph representation pays off for long‑horizon tasks. It’s refreshing to see benchmarks that model enterprise‑style temporal reasoning. This one is both a system design and an eval signal that temporal memory is a real edge.
+This paper argues that agent memory should be modeled as a changing world rather than a static document store, which feels directionally right. The architectural contribution is more interesting than the benchmark wins: memory becomes a temporally-aware graph with provenance, not a pile of retrieved chunks. If that framing holds, it could meaningfully shift how long-lived agent context is built.
