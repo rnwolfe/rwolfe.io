@@ -1,6 +1,6 @@
 ---
 title: "GitHub - kenforthewin/atomic: Self-hosted, semantically-connected personal knowledge base · GitHub"
-pubDate: 2026-04-07
+pubDate: 2026-04-14
 type: bookmark
 tags: ["bookmark", "github"]
 source: "github.com"
@@ -9,4 +9,4 @@ relatedProjects: []
 relatedPosts: []
 ---
 
-Atomic turns Markdown notes into a semantically‑connected knowledge base: chunks, embeddings, tags, and a graph‑shaped UI. I like that it bridges personal PKM and agentic RAG in one product—search, chat, wiki synthesis, and MCP access all in one place. The system design is pragmatic: local‑first, multiple AI providers, plus a headless server for self‑hosting. It’s a modern take on “Obsidian + vector DB,” but packaged as a cohesive platform. Worth tracking if you care about tool‑grade memory for individuals.
+Atomic feels like a thoughtful attempt to make personal knowledge bases natively semantic without abandoning markdown as the source of truth. I like the idea that notes become more valuable when they can be continuously re-linked, synthesized, and queried by AI rather than just searched. It points toward PKM tools becoming evolving memory systems instead of static notebooks.

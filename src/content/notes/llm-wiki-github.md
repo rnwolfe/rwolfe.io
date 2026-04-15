@@ -1,6 +1,6 @@
 ---
 title: "llm-wiki · GitHub"
-pubDate: 2026-04-07
+pubDate: 2026-04-14
 type: bookmark
 tags: ["bookmark", "github", "ai", "agents"]
 source: "gist.github.com"
@@ -9,4 +9,4 @@ relatedProjects: []
 relatedPosts: []
 ---
 
-This is a clear conceptual shift: instead of querying raw docs every time, maintain a persistent LLM‑written wiki that compounds over time. The metaphor is good: Obsidian is the IDE, the LLM is the programmer, the wiki is the codebase. The distinction between immutable raw sources and mutable wiki synthesis is the key architectural pattern. It’s less about retrieval and more about accumulation and maintenance—a useful mental model for long‑term research or team knowledge bases. Powerful even if the tooling is DIY.
+I like this because it replaces one-shot retrieval with a persistent, compounding knowledge artifact. The core insight is that a wiki maintained by an LLM can accumulate structure, cross-references, and synthesis over time instead of rebuilding understanding from scratch on every question. It feels less like “RAG with notes” and more like a compiled research substrate.

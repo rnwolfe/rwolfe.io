@@ -1,6 +1,6 @@
 ---
 title: "GitHub - getzep/graphiti: Build Real-Time Knowledge Graphs for AI Agents · GitHub"
-pubDate: 2026-04-07
+pubDate: 2026-04-14
 type: bookmark
 tags: ["bookmark", "github", "ai", "agents"]
 source: "github.com"
@@ -9,4 +9,4 @@ relatedProjects: []
 relatedPosts: []
 ---
 
-Graphiti is a temporal context‑graph engine for agents—facts have validity windows, provenance, and evolving entity summaries. The key idea is to treat memory as a living graph rather than static chunks: what’s true now vs. what was true is first‑class. It feels like a strong alternative to vanilla RAG: incremental updates, hybrid retrieval (semantic + graph), and explicit relationships. The MCP server angle makes it immediately usable by agent frameworks. This is a solid reference design for “memory that changes.”
+Graphiti is interesting because it pushes beyond static retrieval toward a living memory system that tracks change over time. The temporal angle matters, since agents operating in the real world need to know not just facts, but when those facts were true and what evidence produced them. It feels like a richer memory architecture than ordinary RAG, though one that likely comes with real complexity costs.
