@@ -20,9 +20,29 @@ import GlassPanel from '../components/ui/GlassPanel.astro';
           <Icon name="lucide:mail" class="w-4 h-4" />
           Email me
         </a>
-        <p class="text-xs text-zinc-500 dark:text-zinc-500">
-          TODO: set your email address in <code>src/pages/contact.astro</code> (mailto) and optionally add social links.
-        </p>
+        <div class="flex flex-wrap gap-3 mt-2">
+          <a
+            href="https://github.com/rnwolfe"
+            class="px-4 py-2 border border-zinc-300 dark:border-zinc-700 rounded-xl text-sm font-medium hover:border-zinc-500 dark:hover:border-zinc-500 transition-colors flex items-center gap-2"
+          >
+            <Icon name="lucide:github" class="w-4 h-4" />
+            GitHub
+          </a>
+          <a
+            href="https://x.com/somewolfe"
+            class="px-4 py-2 border border-zinc-300 dark:border-zinc-700 rounded-xl text-sm font-medium hover:border-zinc-500 dark:hover:border-zinc-500 transition-colors flex items-center gap-2"
+          >
+            <Icon name="lucide:twitter" class="w-4 h-4" />
+            X
+          </a>
+          <a
+            href="https://www.linkedin.com/in/rnwolfe"
+            class="px-4 py-2 border border-zinc-300 dark:border-zinc-700 rounded-xl text-sm font-medium hover:border-zinc-500 dark:hover:border-zinc-500 transition-colors flex items-center gap-2"
+          >
+            <Icon name="lucide:linkedin" class="w-4 h-4" />
+            LinkedIn
+          </a>
+        </div>
       </div>
     </GlassPanel>
   </div>
