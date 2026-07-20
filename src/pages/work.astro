@@ -1,0 +1,319 @@
+---
+import { Icon } from 'astro-icon/components';
+import Layout from '../layouts/Layout.astro';
+import GlassPanel from '../components/ui/GlassPanel.astro';
+import MetricGrid from '../components/ui/MetricGrid.astro';
+
+const mailto =
+  'mailto:rn.wolfe@gmail.com?subject=' +
+  encodeURIComponent('Agent engagement — via rwolfe.io/work');
+
+const fleetMetrics = [
+  { label: 'Agent runs', value: '476' },
+  { label: 'Auto-merged, no review', value: '333 (~70%)' },
+  { label: 'Orchestrator releases', value: '79' },
+  { label: 'Agent-drivable CLIs shipped', value: '8' },
+];
+
+const ladder = [
+  {
+    name: 'Agent-Readiness Audit',
+    price: '$8,500',
+    priceNote: 'fixed price',
+    duration: '2 weeks',
+    icon: 'lucide:scan-search',
+    blurb:
+      'A scorecard of your org on the six axes that decide whether agent work survives production — plus a costed 90-day roadmap with a named first pilot.',
+    deliverables: [
+      'Agent-Readiness Scorecard: verification gates, merge-safety architecture, trust-ladder maturity, eval infrastructure, tool agent-legibility, operator surface',
+      'Stack + workflow audit: where agents already run, where runs silently fail, where humans are the bottleneck',
+      '90-day roadmap, sequenced and costed, with pre-registered success metrics for the first pilot',
+      'Executive walkthrough (60–90 min) + written report',
+    ],
+  },
+  {
+    name: 'Pilot Implementation Sprint',
+    price: 'from $24,000',
+    priceNote: 'fixed price',
+    duration: '4–6 weeks',
+    icon: 'lucide:rocket',
+    featured: true,
+    blurb:
+      'One agent workflow, end-to-end to production, built on the operating model I run daily — with success criteria signed before the build starts.',
+    deliverables: [
+      'Structured completion contracts — no silent failures',
+      'Per-run branch isolation, a verifier gate before merge, and a kill switch',
+      'A written trust-ladder policy: what runs unsupervised vs. reviewed, per surface',
+      'Metrics instrumentation: auto-merge rate, intervention rate, time-to-merge',
+      'Pre-registered success criteria, signed before build — the anti-“dead pilot” clause',
+      'Handoff: runbook + 2 recorded working sessions with your designated owner',
+    ],
+  },
+  {
+    name: 'Fractional Agent-Platform Lead',
+    price: 'from $7,500/mo',
+    priceNote: '3-month minimum',
+    duration: 'ongoing',
+    icon: 'lucide:compass',
+    blurb:
+      'I own your agent-platform direction so your team can own the code: policy evolution, eval reviews, new-workflow greenlights, and a monthly metrics review.',
+    deliverables: [
+      'Trust-ladder policy evolution as autonomy earns its way up',
+      'Eval suite reviews and new-workflow greenlights',
+      'Vendor and tooling calls — vendor-neutral, no rebates',
+      'Monthly metrics review against the pre-registered targets',
+      'Async Slack/issue access with a 1-business-day SLA',
+    ],
+  },
+];
+
+const objections = [
+  {
+    q: '“You have a day job — will you be responsive?”',
+    a: 'Async-first by design, and that’s a feature: my own fleet ships while I sleep; yours will too. The SOW defines a 1-business-day SLA and a weekly synchronous checkpoint. Fixed-price deliverables mean you’re buying outcomes, not my hours.',
+  },
+  {
+    q: '“~70% on your own projects ≠ our codebase.”',
+    a: 'Correct — which is why every engagement starts with pre-registered success criteria for your environment, not my numbers. My numbers prove the operating model exists. Yours get measured the same instrumented way.',
+  },
+  {
+    q: '“Why not just have our own engineers do this?”',
+    a: 'They should — after the sprint. The deliverable includes the runbook and the trust-ladder policy so your team owns it. You’re buying a six-week head start on years of my own trial and error, not a dependency.',
+  },
+  {
+    q: '“We already rolled out Copilot / Cursor.”',
+    a: 'Assistants are not autonomous agents. Coding assistants lift individual throughput; unsupervised agent work is a different safety problem — merges that happen without a human in the loop. The readiness scorecard covers exactly that gap.',
+  },
+  {
+    q: '“How do we know agent code is safe to merge?”',
+    a: 'You don’t, today — that’s the point. Verifier gates make every merge earn trust, and the trust ladder makes autonomy graduated and revocable. I’ll show you mine, live.',
+  },
+  {
+    q: '“A big firm quoted us $150K for a readiness assessment.”',
+    a: 'Their deliverable is a deck. Mine is a scorecard, a costed roadmap, and an operator on the hook to implement the next rung at a fixed price — at a fraction of that quote.',
+  },
+];
+---
+
+<Layout
+  title="Work with me | Ryan Wolfe"
+  description="I run a production agent fleet that ships ~70% of its work unsupervised. I'll build yours."
+>
+  <!-- Background Gradients -->
+  <div class="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
+    <div class="absolute top-0 left-1/4 w-96 h-96 bg-brand-500/20 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob dark:bg-brand-500/10"></div>
+    <div
+      class="absolute top-0 right-1/4 w-96 h-96 bg-purple-500/20 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob dark:bg-purple-500/10"
+      style="animation-delay: 2s"
+    ></div>
+  </div>
+
+  <div class="max-w-5xl mx-auto flex flex-col gap-6">
+    <!-- Hero -->
+    <GlassPanel class="p-8 md:p-12">
+      <div class="inline-block px-3 py-1 rounded-full bg-brand-500/10 text-brand-500 text-xs font-bold font-mono uppercase tracking-widest mb-4">
+        Work with me
+      </div>
+      <h1 class="text-4xl md:text-6xl font-bold tracking-tight mb-6 leading-tight">
+        I run a production agent fleet that ships
+        <span class="text-transparent bg-clip-text bg-linear-to-r from-brand-500 to-purple-600">
+          ~70% of its work unsupervised.
+        </span>
+        I’ll build yours.
+      </h1>
+      <p class="text-gray-600 dark:text-gray-400 text-lg max-w-2xl leading-relaxed mb-4">
+        Most AI consultants sell decks. I sell an operating model I already run: my own software
+        studio is a fleet of autonomous coding agents on infrastructure I built — and roughly 70%
+        of its work merges to main with no human review. Safely, because every run passes a
+        verifier gate, every project sits on an explicit trust ladder, and every completion is a
+        structured contract, not a vibe.
+      </p>
+      <p class="text-gray-600 dark:text-gray-400 text-lg max-w-2xl leading-relaxed">
+        Industry surveys put the share of enterprise agent pilots that never reach production at
+        <a
+          href="https://www.langchain.com/state-of-agent-engineering"
+          class="text-brand-600 dark:text-brand-400 hover:underline"
+          rel="noopener">78–88%</a
+        >. The cause is almost never the model. It’s missing verification, missing evals, and
+        missing operational ownership — the only three things I sell.
+      </p>
+      <div class="flex flex-wrap gap-3 mt-8">
+        <a
+          href={mailto}
+          class="px-6 py-3 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-xl font-medium hover:opacity-90 transition-opacity flex items-center gap-2"
+        >
+          <Icon name="lucide:mail" class="w-4 h-4" />
+          Start a conversation
+        </a>
+        <a
+          href="#offers"
+          class="px-6 py-3 glass-panel border border-gray-200 dark:border-gray-700 rounded-xl font-medium hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+        >
+          See the engagements
+        </a>
+      </div>
+    </GlassPanel>
+
+    <!-- Fleet metrics -->
+    <div>
+      <MetricGrid metrics={fleetMetrics} />
+      <p class="text-xs text-zinc-500 dark:text-zinc-400 mt-2 px-2">
+        Fleet metrics as of July 2026, pulled from the fleet’s own instrumented database — happy to
+        screen-share the live dashboard. These are my numbers on my projects; yours get measured
+        the same way.
+      </p>
+    </div>
+
+    <!-- Why pilots die / how mine don't -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <GlassPanel class="p-6">
+        <Icon name="lucide:shield-check" class="w-8 h-8 text-brand-500 mb-3" />
+        <h3 class="text-lg font-bold mb-2">Verification, not vibes</h3>
+        <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+          Every run ends in a structured completion contract and passes a verifier gate before
+          anything merges. Runs can fail loudly — they can’t fail silently.
+        </p>
+      </GlassPanel>
+      <GlassPanel class="p-6">
+        <Icon name="lucide:git-merge" class="w-8 h-8 text-purple-500 mb-3" />
+        <h3 class="text-lg font-bold mb-2">Merge safety by architecture</h3>
+        <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+          Per-run branch isolation, explicit auto-merge policy, and a kill switch. Autonomy is
+          graduated and revocable — a trust ladder, not a leap of faith.
+        </p>
+      </GlassPanel>
+      <GlassPanel class="p-6">
+        <Icon name="lucide:flask-conical" class="w-8 h-8 text-pink-500 mb-3" />
+        <h3 class="text-lg font-bold mb-2">Evals with teeth</h3>
+        <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+          Pre-registered success criteria, blind adjudication, contamination controls. If your org
+          isn’t ready, the audit says so — and the sprint doesn’t get sold.
+        </p>
+      </GlassPanel>
+    </div>
+
+    <!-- The ladder -->
+    <div id="offers" class="scroll-mt-24">
+      <h2 class="text-3xl md:text-4xl font-bold tracking-tight mb-2">Three ways to engage</h2>
+      <p class="text-gray-600 dark:text-gray-400 mb-6 max-w-2xl">
+        Each rung de-risks the next. Most clients start with the audit; every audit ends with a
+        scoped sprint proposal. Fixed prices, defined deliverables, no hourly meter.
+      </p>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
+        {ladder.map((offer) => (
+          <GlassPanel
+            class:list={[
+              'p-6 h-full flex flex-col',
+              offer.featured && 'border-brand-500/40 hover:border-brand-500/60',
+            ]}
+          >
+            <div class="flex items-center justify-between mb-4">
+              <Icon name={offer.icon} class="w-8 h-8 text-brand-500" />
+              {offer.featured && (
+                <span class="px-2 py-0.5 rounded-full bg-brand-500/10 text-brand-500 text-[10px] font-bold font-mono uppercase tracking-widest">
+                  Core offer
+                </span>
+              )}
+            </div>
+            <h3 class="text-xl font-bold mb-1">{offer.name}</h3>
+            <div class="flex items-baseline gap-2 mb-1">
+              <span class="text-2xl font-bold text-transparent bg-clip-text bg-linear-to-r from-brand-500 to-purple-600">
+                {offer.price}
+              </span>
+              <span class="text-xs text-zinc-500 dark:text-zinc-400 font-mono">{offer.priceNote}</span>
+            </div>
+            <p class="text-xs text-zinc-500 dark:text-zinc-400 font-mono uppercase tracking-widest mb-4">
+              {offer.duration}
+            </p>
+            <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed mb-4">{offer.blurb}</p>
+            <ul class="space-y-2 mt-auto">
+              {offer.deliverables.map((d) => (
+                <li class="flex gap-2 text-sm text-gray-700 dark:text-gray-300">
+                  <Icon name="lucide:check" class="w-4 h-4 text-brand-500 shrink-0 mt-0.5" />
+                  <span>{d}</span>
+                </li>
+              ))}
+            </ul>
+          </GlassPanel>
+        ))}
+      </div>
+    </div>
+
+    <!-- Objections -->
+    <GlassPanel class="p-8 md:p-12">
+      <h2 class="text-3xl md:text-4xl font-bold tracking-tight mb-2">Fair questions</h2>
+      <p class="text-gray-600 dark:text-gray-400 mb-8 max-w-2xl">
+        The ones you should be asking any consultant in this space — answered straight.
+      </p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-8">
+        {objections.map((o) => (
+          <div>
+            <h3 class="font-bold mb-2 leading-snug">{o.q}</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{o.a}</p>
+          </div>
+        ))}
+      </div>
+    </GlassPanel>
+
+    <!-- Who I am -->
+    <GlassPanel class="p-8 md:p-12">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
+        <div class="md:col-span-2">
+          <h2 class="text-3xl font-bold tracking-tight mb-4">The operator, not the talker</h2>
+          <div class="prose dark:prose-invert max-w-none">
+            <p>
+              I’m Ryan Wolfe — a staff engineer at a big tech company, and before that: US Marine
+              Corps data systems, then a decade in network/security consulting where I led
+              solution-delivery teams as a Technical Director. Twenty years of infrastructure
+              discipline, and I’ve held the client-facing bag before.
+            </p>
+            <p>
+              On my own time I built and operate the fleet: the orchestration system has shipped 79
+              releases of itself, and I authored an open standard for agent-drivable CLIs
+              (<a href="https://aclig.dev" rel="noopener">aclig.dev</a>) with 8 published conformant
+              tools. Ask any other consultant in this space for their auto-merge rate.
+            </p>
+          </div>
+        </div>
+        <div class="glass-panel rounded-2xl p-6">
+          <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">Ground rules</h3>
+          <ul class="space-y-3 text-sm text-gray-700 dark:text-gray-300">
+            <li class="flex gap-2">
+              <Icon name="lucide:calendar-check" class="w-4 h-4 text-brand-500 shrink-0 mt-0.5" />
+              Every number is dated and comes from an instrumented system.
+            </li>
+            <li class="flex gap-2">
+              <Icon name="lucide:scale" class="w-4 h-4 text-brand-500 shrink-0 mt-0.5" />
+              Vendor-neutral — the fleet runs more than one agent vendor today, and recommendations aren’t rebates.
+            </li>
+            <li class="flex gap-2">
+              <Icon name="lucide:ban" class="w-4 h-4 text-brand-500 shrink-0 mt-0.5" />
+              No projected-ROI theater. If you’re not ready, the audit says so.
+            </li>
+          </ul>
+        </div>
+      </div>
+    </GlassPanel>
+
+    <!-- Final CTA -->
+    <GlassPanel class="p-8 md:p-12 text-center">
+      <h2 class="text-3xl md:text-4xl font-bold tracking-tight mb-4">
+        Your pilots are dying in the 88%.
+        <span class="text-transparent bg-clip-text bg-linear-to-r from-brand-500 to-purple-600">
+          Let’s get you into the 12%.
+        </span>
+      </h2>
+      <p class="text-gray-600 dark:text-gray-400 max-w-xl mx-auto mb-8">
+        Email me a paragraph about where agents are stuck in your org. I’ll reply within one
+        business day with whether — and how — I can help.
+      </p>
+      <a
+        href={mailto}
+        class="inline-flex px-8 py-4 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-xl font-medium hover:opacity-90 transition-opacity items-center gap-2"
+      >
+        <Icon name="lucide:mail" class="w-5 h-5" />
+        rn.wolfe@gmail.com
+      </a>
+    </GlassPanel>
+  </div>
+</Layout>
