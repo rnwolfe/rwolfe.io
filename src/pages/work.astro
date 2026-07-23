@@ -22,6 +22,7 @@ const ladder = [
     priceNote: 'fixed price',
     duration: '2 weeks',
     icon: 'lucide:scan-search',
+    moreHref: '/work/audit',
     blurb:
       'A scorecard of your org on the six axes that decide whether agent work survives production — plus a costed 90-day roadmap with a named first pilot.',
     deliverables: [
@@ -234,6 +235,14 @@ const objections = [
                 </li>
               ))}
             </ul>
+            {offer.moreHref && (
+              <a
+                href={offer.moreHref}
+                class="mt-4 inline-flex items-center gap-1 text-sm font-medium text-brand-600 dark:text-brand-400 hover:underline"
+              >
+                Read the full one-pager →
+              </a>
+            )}
           </GlassPanel>
         ))}
       </div>
