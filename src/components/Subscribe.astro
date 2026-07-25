@@ -1,23 +1,23 @@
 ---
 /**
- * Email capture.
+ * Email capture — Buttondown embed, no API key, no backend.
  *
- * CONTRACT — this component is not provider-agnostic by itself. It POSTs
- * `{"email": "..."}` as JSON and expects a 2xx for success; anything else is
- * treated as failure. That means the endpoint must accept a cross-origin JSON
- * POST, which most provider APIs do NOT (they require an API key, which a
- * static site cannot hold safely).
+ * HOW IT WORKS. The form is a real `<form action method="post">` pointed at
+ * Buttondown's embed endpoint, so it works with JavaScript disabled (the
+ * visitor is taken to Buttondown's own confirmation page). JS then
+ * progressively enhances it: the submit is intercepted and re-sent with
+ * `fetch(..., { mode: 'no-cors' })` so the reader stays on the page.
  *
- * So the default endpoint is our own `/api/subscribe` serverless function,
- * which speaks this contract and holds the provider key server-side. Swapping
- * providers (Buttondown, Resend, ...) is an env change in that function, not a
- * change here — that's where the reversibility actually lives.
+ * THE HONEST CAVEAT. `no-cors` makes the response opaque — we cannot read the
+ * status, so the inline success message is *optimistic*. That's acceptable
+ * here only because Buttondown is double opt-in: nobody is subscribed until
+ * they click the link in the confirmation email, so "check your inbox to
+ * confirm" is true whether or not the POST succeeded. Client-side validation
+ * catches the common failure (a malformed address) before we get there.
  *
- * Override with PUBLIC_NEWSLETTER_ENDPOINT only for an endpoint that genuinely
- * accepts CORS JSON POSTs in this shape.
- *
- * With no endpoint configured the form renders in a clearly-labelled disabled
- * state rather than silently swallowing addresses.
+ * If precise success/failure ever matters more than simplicity, put a
+ * serverless function in front of Buttondown's authenticated API and point
+ * PUBLIC_NEWSLETTER_ACTION at it — the markup below doesn't change.
  */
 interface Props {
   /** 'panel' = standalone card (homepage). 'inline' = end-of-essay. */
@@ -34,10 +34,11 @@ const {
   class: className = '',
 } = Astro.props;
 
-// Defaults to our own function (see api/subscribe.ts). Set
-// PUBLIC_NEWSLETTER_ENDPOINT to '' to deliberately render the disabled state.
-const endpoint = import.meta.env.PUBLIC_NEWSLETTER_ENDPOINT ?? '/api/subscribe';
-const configured = endpoint.length > 0;
+// Set PUBLIC_NEWSLETTER_ACTION to '' to deliberately render the disabled state.
+const action =
+  import.meta.env.PUBLIC_NEWSLETTER_ACTION ??
+  'https://buttondown.com/api/emails/embed-subscribe/rwolfe.io';
+const configured = action.length > 0;
 const id = `sub-${Math.random().toString(36).slice(2, 8)}`;
 ---
 
@@ -49,7 +50,6 @@ const id = `sub-${Math.random().toString(36).slice(2, 8)}`;
       : '',
     className,
   ]}
-  data-endpoint={endpoint}
   aria-labelledby={`${id}-h`}
 >
   <h2
@@ -65,7 +65,12 @@ const id = `sub-${Math.random().toString(36).slice(2, 8)}`;
     {blurb}
   </p>
 
-  <form class="sub-form flex flex-col sm:flex-row gap-3 max-w-md" novalidate>
+  <form
+    class="sub-form embeddable-buttondown-form flex flex-col sm:flex-row gap-3 max-w-md"
+    action={action}
+    method="post"
+    target="_blank"
+  >
     <label class="sr-only" for={`${id}-email`}>Email address</label>
     <input
       id={`${id}-email`}
@@ -93,22 +98,34 @@ const id = `sub-${Math.random().toString(36).slice(2, 8)}`;
       </span>
     )}
   </p>
+
+  <p class="text-xs text-gray-400 dark:text-gray-600 mt-2">
+    <a
+      href="https://buttondown.com/refer/rwolfe.io"
+      target="_blank"
+      rel="noopener"
+      class="hover:text-brand-600 dark:hover:text-brand-400 transition-colors"
+    >
+      Powered by Buttondown.
+    </a>
+  </p>
 </section>
 
 <script>
   const init = () => {
     document.querySelectorAll<HTMLElement>('.subscribe').forEach((root) => {
       if (root.dataset.bound === '1') return;
-      const endpoint = root.dataset.endpoint || '';
-      if (!endpoint) return;
 
       const form = root.querySelector<HTMLFormElement>('.sub-form');
       const status = root.querySelector<HTMLElement>('.sub-status');
       const input = root.querySelector<HTMLInputElement>('input[type="email"]');
       const button = root.querySelector<HTMLButtonElement>('button[type="submit"]');
       if (!form || !status || !input || !button) return;
+      if (!form.action) return;
 
       root.dataset.bound = '1';
+      // Only stop the native navigation once JS is definitely handling it.
+      form.removeAttribute('target');
 
       const say = (msg: string, tone: 'ok' | 'err' | 'muted') => {
         status.textContent = msg;
@@ -134,20 +151,23 @@ const id = `sub-${Math.random().toString(36).slice(2, 8)}`;
         say('Subscribing…', 'muted');
 
         try {
-          const res = await fetch(endpoint, {
+          // Opaque by design — see the component comment. Buttondown's embed
+          // endpoint sends no CORS headers, so we can't read the result.
+          await fetch(form.action, {
             method: 'POST',
-            headers: { 'content-type': 'application/json' },
-            body: JSON.stringify({ email }),
+            mode: 'no-cors',
+            headers: { 'content-type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({ email }).toString(),
           });
-          if (!res.ok) throw new Error(String(res.status));
           form.reset();
-          say('You’re in. Check your inbox to confirm.', 'ok');
+          say('Almost there — check your inbox to confirm.', 'ok');
         } catch {
-          say('Something went wrong — try again in a moment.', 'err');
+          // Network-level failure. Fall back to the real form post so the
+          // visitor still gets subscribed rather than hitting a dead end.
+          say('Opening the signup page…', 'muted');
+          form.setAttribute('target', '_blank');
+          form.submit();
         } finally {
-          // Always re-enable. Previously the success path left the button stuck
-          // disabled until reload, which stranded anyone who mistyped their
-          // address or hit a false-positive success.
           button.disabled = false;
         }
       });
