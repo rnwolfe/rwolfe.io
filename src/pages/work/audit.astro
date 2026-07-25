@@ -9,8 +9,8 @@ const mailto =
   encodeURIComponent('Agent-Readiness Audit — via rwolfe.io/work/audit');
 
 const fleetMetrics = [
-  { label: 'Agent runs', value: '476' },
-  { label: 'Auto-merged, no review', value: '333 (~70%)' },
+  { label: 'Agent runs', value: '483' },
+  { label: 'Completed without me intervening', value: '340 (70%)' },
   { label: 'Orchestrator releases', value: '103' },
   { label: 'Agent-drivable CLIs shipped', value: '8' },
 ];
@@ -242,7 +242,7 @@ const deliverables = [
       <h2 class="text-3xl md:text-4xl font-bold tracking-tight mb-2">Why me</h2>
       <p class="text-gray-600 dark:text-gray-400 mb-6 max-w-2xl">
         I’m a staff engineer at a big tech company, and on my own time I run a production fleet of
-        autonomous coding agents on infrastructure I built. The numbers, as of 2026-07-19,
+        autonomous coding agents on infrastructure I built. The numbers, as of 2026-07-25,
         live-verified from my own instrumented systems:
       </p>
       <div class="mb-4">
@@ -250,16 +250,18 @@ const deliverables = [
       </div>
       <div class="prose dark:prose-invert max-w-none">
         <p>
-          The audit measures 476 agent runs across 12 projects, 333 of them (~70%) auto-merged to
-          <code>main</code> with no human review, and 103 releases of the orchestration system that
-          runs the fleet.
+          The fleet has logged 483 agent runs across 12 projects; 340 of them (~70%) completed
+          end-to-end without me intervening, and I’ve cut 103 releases of the orchestration system
+          that runs it. Three of those 12 projects run fully autonomous with auto-merge enabled —
+          156 runs there, 101 of them completed.
         </p>
         <p>
-          That ~70% is <em>my</em> fleet on <em>my</em> projects — I’m not promising you’ll hit that
-          number, and I’ll never imply a client did. What it proves is that the operating model
-          exists and I run it every day: verifier gates before merge, per-run isolation, an explicit
-          trust ladder, structured completion contracts, evals with pre-registered criteria. Most
-          people in this space sell the strategy. I can show you my merge log.
+          That ~70% is <em>my</em> fleet on <em>my</em> projects — a completion rate, not a promise
+          about your codebase, and I’ll never imply a client hit it. What it proves is that the
+          operating model exists and I run it every day: verifier gates before merge, per-run
+          isolation, an explicit trust ladder, structured completion contracts, evals with
+          pre-registered criteria. Most people in this space sell the strategy. I can show you the
+          run table.
         </p>
         <p>
           I bring 20 years of infrastructure discipline behind it — USMC data systems, a decade
