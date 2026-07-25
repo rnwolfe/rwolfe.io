@@ -2,10 +2,19 @@
 /**
  * Email capture.
  *
- * Endpoint-agnostic on purpose: set PUBLIC_NEWSLETTER_ENDPOINT to whatever
- * provider you land on (Buttondown, ConvertKit, beehiiv, Ghost, a Resend-backed
- * function...) and this component doesn't change. That keeps the platform
- * decision reversible — the list is the asset, not the vendor.
+ * CONTRACT — this component is not provider-agnostic by itself. It POSTs
+ * `{"email": "..."}` as JSON and expects a 2xx for success; anything else is
+ * treated as failure. That means the endpoint must accept a cross-origin JSON
+ * POST, which most provider APIs do NOT (they require an API key, which a
+ * static site cannot hold safely).
+ *
+ * So the default endpoint is our own `/api/subscribe` serverless function,
+ * which speaks this contract and holds the provider key server-side. Swapping
+ * providers (Buttondown, Resend, ...) is an env change in that function, not a
+ * change here — that's where the reversibility actually lives.
+ *
+ * Override with PUBLIC_NEWSLETTER_ENDPOINT only for an endpoint that genuinely
+ * accepts CORS JSON POSTs in this shape.
  *
  * With no endpoint configured the form renders in a clearly-labelled disabled
  * state rather than silently swallowing addresses.
@@ -25,7 +34,9 @@ const {
   class: className = '',
 } = Astro.props;
 
-const endpoint = import.meta.env.PUBLIC_NEWSLETTER_ENDPOINT ?? '';
+// Defaults to our own function (see api/subscribe.ts). Set
+// PUBLIC_NEWSLETTER_ENDPOINT to '' to deliberately render the disabled state.
+const endpoint = import.meta.env.PUBLIC_NEWSLETTER_ENDPOINT ?? '/api/subscribe';
 const configured = endpoint.length > 0;
 const id = `sub-${Math.random().toString(36).slice(2, 8)}`;
 ---
@@ -133,6 +144,10 @@ const id = `sub-${Math.random().toString(36).slice(2, 8)}`;
           say('You’re in. Check your inbox to confirm.', 'ok');
         } catch {
           say('Something went wrong — try again in a moment.', 'err');
+        } finally {
+          // Always re-enable. Previously the success path left the button stuck
+          // disabled until reload, which stranded anyone who mistyped their
+          // address or hit a false-positive success.
           button.disabled = false;
         }
       });
