@@ -7,29 +7,15 @@ import { getCollection } from 'astro:content';
 const projects = await getCollection('projects');
 const hasProjects = projects.length > 0;
 
+// Flat, three-item nav. Two dropdowns with eight sub-items were browsing
+// surfaces competing for a first-time reader's attention; they now live in the
+// footer, reachable but not shouting. The split is deliberate:
+//   Essays  → the people side
+//   Projects → the systems side (only shown once there's something to show)
 const navItems = [
-  { label: 'Home', href: '/' },
-  {
-    label: 'Writing',
-    href: '/start',
-    children: [
-      { label: 'Start', href: '/start' },
-      { label: 'Blog', href: '/blog' },
-      { label: 'Notes', href: '/notes' },
-      { label: 'Tags', href: '/tags' },
-    ],
-  },
-  {
-    label: 'About',
-    href: '/about',
-    children: [
-      { label: 'Journey', href: '/journey' },
-      { label: 'About', href: '/about' },
-      { label: 'Uses', href: '/uses' },
-      { label: 'Contact', href: '/contact' },
-    ],
-  },
-  ...(hasProjects ? [{ label: 'Selected Work', href: '/projects' }] : []),
+  { label: 'Essays', href: '/blog' },
+  ...(hasProjects ? [{ label: 'Projects', href: '/projects' }] : []),
+  { label: 'About', href: '/about' },
 ];
 ---
 

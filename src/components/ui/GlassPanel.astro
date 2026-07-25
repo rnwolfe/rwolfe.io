@@ -1,7 +1,10 @@
 ---
-const { class: className } = Astro.props;
+// Forward arbitrary attributes (id, data-*, aria-*, role...) to the rendered
+// element. Without this, `<GlassPanel id="x">` silently dropped the id, which
+// broke anchor links pointing at a panel.
+const { class: className, ...rest } = Astro.props;
 ---
 
-<div class:list={['glass-panel rounded-3xl', className]}>
+<div class:list={['glass-panel rounded-3xl', className]} {...rest}>
   <slot />
 </div>
