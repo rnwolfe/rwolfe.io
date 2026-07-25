@@ -4,6 +4,7 @@ import type { CollectionEntry } from 'astro:content';
 import Layout from './Layout.astro';
 import GlassPanel from '../components/ui/GlassPanel.astro';
 import FormattedDate from '../components/FormattedDate.astro';
+import Subscribe from '../components/Subscribe.astro';
 
 type Props = CollectionEntry<'blog'>['data'];
 
@@ -44,6 +45,10 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
       <div class="prose prose-lg dark:prose-invert max-w-none prose-headings:font-bold prose-a:text-brand-500 hover:prose-a:text-brand-600">
         <slot />
       </div>
+
+      <!-- Peak-intent capture: a reader who finished the essay is the most
+           qualified visitor the site ever gets. Previously offered nothing. -->
+      <Subscribe variant="inline" heading="If this was useful, there’ll be more" />
     </GlassPanel>
   </article>
 </Layout>

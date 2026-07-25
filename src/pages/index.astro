@@ -3,6 +3,7 @@ import { Icon } from 'astro-icon/components';
 import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 import GlassPanel from '../components/ui/GlassPanel.astro';
+import Subscribe from '../components/Subscribe.astro';
 
 const posts = (await getCollection('blog'))
   .filter((p) => p.data.status !== 'draft')
@@ -50,32 +51,33 @@ const latestProject = projects[0];
         </p>
       </div>
 
+      <!-- One primary action. The previous four CTAs ("Start here" / "Read
+           essays" / "Work with me" / "Browse notes") were three doors to the
+           same room plus a premature ask — a visitor offered four things is
+           offered none. The sequence that actually works here is
+           read → trust → they reach out, so leading with "hire me" inverted it.
+           /work, /start and /notes all remain, in the footer. -->
       <div class="flex flex-wrap gap-3 mt-8">
+        {latestPost && (
+          <a
+            href={`/blog/${latestPost.id}/`}
+            class="px-6 py-3 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-xl font-medium hover:opacity-90 transition-opacity flex items-center gap-2"
+          >
+            Read the latest essay <Icon name="lucide:arrow-right" class="w-4 h-4" />
+          </a>
+        )}
         <a
-          href="/start"
-          class="px-6 py-3 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-xl font-medium hover:opacity-90 transition-opacity flex items-center gap-2"
-        >
-          Start here <Icon name="lucide:arrow-right" class="w-4 h-4" />
-        </a>
-        <a
-          href="/blog"
+          href="#subscribe"
           class="px-6 py-3 glass-panel border border-gray-200 dark:border-gray-700 rounded-xl font-medium hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
         >
-          Read essays
-        </a>
-        <a
-          href="/work"
-          class="px-6 py-3 glass-panel border border-brand-500/30 rounded-xl font-medium text-brand-600 dark:text-brand-400 hover:bg-brand-500/10 transition-colors"
-        >
-          Work with me
-        </a>
-        <a
-          href="/notes"
-          class="px-6 py-3 glass-panel border border-gray-200 dark:border-gray-700 rounded-xl font-medium hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
-        >
-          Browse notes
+          Subscribe
         </a>
       </div>
+    </GlassPanel>
+
+    <!-- 2) Subscribe — the one compounding asset on the page -->
+    <GlassPanel id="subscribe" class="md:col-span-3 p-8 scroll-mt-24">
+      <Subscribe />
     </GlassPanel>
 
     <!-- 3) What I'm thinking about (evergreen-ish) -->

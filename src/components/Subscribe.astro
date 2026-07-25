@@ -1,0 +1,144 @@
+---
+/**
+ * Email capture.
+ *
+ * Endpoint-agnostic on purpose: set PUBLIC_NEWSLETTER_ENDPOINT to whatever
+ * provider you land on (Buttondown, ConvertKit, beehiiv, Ghost, a Resend-backed
+ * function...) and this component doesn't change. That keeps the platform
+ * decision reversible — the list is the asset, not the vendor.
+ *
+ * With no endpoint configured the form renders in a clearly-labelled disabled
+ * state rather than silently swallowing addresses.
+ */
+interface Props {
+  /** 'panel' = standalone card (homepage). 'inline' = end-of-essay. */
+  variant?: 'panel' | 'inline';
+  heading?: string;
+  blurb?: string;
+  class?: string;
+}
+
+const {
+  variant = 'panel',
+  heading = 'New essays, when they’re worth sending',
+  blurb = 'Occasional writing on building systems — and the people who build them. No cadence promises, no filler. Unsubscribe in one click.',
+  class: className = '',
+} = Astro.props;
+
+const endpoint = import.meta.env.PUBLIC_NEWSLETTER_ENDPOINT ?? '';
+const configured = endpoint.length > 0;
+const id = `sub-${Math.random().toString(36).slice(2, 8)}`;
+---
+
+<section
+  class:list={[
+    'subscribe',
+    variant === 'inline'
+      ? 'mt-12 pt-8 border-t border-gray-200 dark:border-gray-700'
+      : '',
+    className,
+  ]}
+  data-endpoint={endpoint}
+  aria-labelledby={`${id}-h`}
+>
+  <h2
+    id={`${id}-h`}
+    class:list={[
+      'font-bold tracking-tight',
+      variant === 'inline' ? 'text-xl mb-2' : 'text-2xl mb-2',
+    ]}
+  >
+    {heading}
+  </h2>
+  <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed max-w-prose mb-5">
+    {blurb}
+  </p>
+
+  <form class="sub-form flex flex-col sm:flex-row gap-3 max-w-md" novalidate>
+    <label class="sr-only" for={`${id}-email`}>Email address</label>
+    <input
+      id={`${id}-email`}
+      type="email"
+      name="email"
+      required
+      autocomplete="email"
+      placeholder="you@example.com"
+      disabled={!configured}
+      class="flex-1 min-w-0 px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white/70 dark:bg-neutral-900/70 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-500/60 focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed"
+    />
+    <button
+      type="submit"
+      disabled={!configured}
+      class="px-6 py-3 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-xl font-medium hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed whitespace-nowrap"
+    >
+      Subscribe
+    </button>
+  </form>
+
+  <p class="sub-status text-sm mt-3 min-h-[1.25rem]" role="status" aria-live="polite">
+    {!configured && (
+      <span class="text-gray-500 dark:text-gray-500">
+        Signup opens shortly — the list isn’t wired up yet.
+      </span>
+    )}
+  </p>
+</section>
+
+<script>
+  const init = () => {
+    document.querySelectorAll<HTMLElement>('.subscribe').forEach((root) => {
+      if (root.dataset.bound === '1') return;
+      const endpoint = root.dataset.endpoint || '';
+      if (!endpoint) return;
+
+      const form = root.querySelector<HTMLFormElement>('.sub-form');
+      const status = root.querySelector<HTMLElement>('.sub-status');
+      const input = root.querySelector<HTMLInputElement>('input[type="email"]');
+      const button = root.querySelector<HTMLButtonElement>('button[type="submit"]');
+      if (!form || !status || !input || !button) return;
+
+      root.dataset.bound = '1';
+
+      const say = (msg: string, tone: 'ok' | 'err' | 'muted') => {
+        status.textContent = msg;
+        status.className =
+          'sub-status text-sm mt-3 min-h-[1.25rem] ' +
+          (tone === 'ok'
+            ? 'text-green-600 dark:text-green-400'
+            : tone === 'err'
+              ? 'text-red-600 dark:text-red-400'
+              : 'text-gray-500');
+      };
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = input.value.trim();
+        if (!email || !input.checkValidity()) {
+          say('That email doesn’t look right.', 'err');
+          input.focus();
+          return;
+        }
+
+        button.disabled = true;
+        say('Subscribing…', 'muted');
+
+        try {
+          const res = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({ email }),
+          });
+          if (!res.ok) throw new Error(String(res.status));
+          form.reset();
+          say('You’re in. Check your inbox to confirm.', 'ok');
+        } catch {
+          say('Something went wrong — try again in a moment.', 'err');
+          button.disabled = false;
+        }
+      });
+    });
+  };
+
+  document.addEventListener('DOMContentLoaded', init);
+  document.addEventListener('astro:page-load', init);
+</script>
