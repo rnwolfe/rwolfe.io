@@ -1,0 +1,116 @@
+---
+import Layout from '../layouts/Layout.astro';
+import GlassPanel from '../components/ui/GlassPanel.astro';
+
+/**
+ * The "what is this charge?" page.
+ *
+ * Every product bills through one Stripe account, so every card statement
+ * carries the same RWOLFE.IO prefix. Someone who does not recognise a line on
+ * their statement has two options: search for the descriptor, or dispute the
+ * charge. This page exists so the first one works — a dispute costs a fee and
+ * counts against the account's ratio across every product, so a page that
+ * resolves the question is the cheapest fraud control available.
+ *
+ * Keep this list current. An unlisted product is one a customer cannot verify.
+ */
+const products = [
+  {
+    name: 'Palisade',
+    descriptor: 'PALISADE',
+    url: 'https://palisade.sh',
+    what: 'MCP server inventory and drift detection for AI agent tooling.',
+  },
+];
+
+const supportEmail = 'support@rwolfe.io';
+const prefix = 'RWOLFE.IO';
+---
+
+<Layout
+  title="Charges | Ryan Wolfe"
+  description={`Charges appearing as ${prefix} on your card or bank statement — what they are and how to reach me.`}
+>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <GlassPanel class="md:col-span-2 p-8">
+      <h1 class="text-4xl font-bold mb-6">About a charge</h1>
+
+      <div class="prose prose-lg dark:prose-invert max-w-none">
+        <p>
+          If you see <code>{prefix}</code> on your card or bank statement, it came from
+          software I build and sell. My name is Ryan Wolfe and I run these products
+          independently.
+        </p>
+
+        <p>
+          Statements are short, so the line usually reads
+          <code>{prefix}* PRODUCT NAME</code> — the second half tells you which one.
+        </p>
+      </div>
+
+      <h2 class="text-2xl font-bold mt-10 mb-4">Products</h2>
+
+      <div class="not-prose space-y-4">
+        {products.map((product) => (
+          <div class="rounded-lg border border-black/10 dark:border-white/10 p-5">
+            <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+              <a href={product.url} class="text-lg font-semibold hover:underline">
+                {product.name}
+              </a>
+              <code class="text-sm opacity-70">{prefix}* {product.descriptor}</code>
+            </div>
+            <p class="mt-2 text-sm opacity-80">{product.what}</p>
+          </div>
+        ))}
+      </div>
+
+      <h2 class="text-2xl font-bold mt-10 mb-4">Don't recognise it?</h2>
+
+      <div class="prose prose-lg dark:prose-invert max-w-none">
+        <p>
+          Email <a href={`mailto:${supportEmail}`}>{supportEmail}</a> with the date and
+          amount and I'll tell you exactly what it was. If it turns out to be something
+          you didn't intend to buy, I'll refund it — you don't need to argue the case,
+          and you don't need to go through your bank.
+        </p>
+
+        <p>
+          A few common explanations before you write: an annual renewal on a
+          subscription started twelve months ago; a plan change that prorated
+          mid-cycle; or a card you share with someone else in your household or team.
+        </p>
+
+        <p>
+          You can also manage or cancel any subscription yourself from the billing
+          link in your account on the product's own site — no email required.
+        </p>
+      </div>
+    </GlassPanel>
+
+    <GlassPanel class="p-8 h-fit">
+      <h2 class="text-xl font-bold mb-4">Quick facts</h2>
+      <dl class="space-y-4 text-sm">
+        <div>
+          <dt class="opacity-60">Statement prefix</dt>
+          <dd><code>{prefix}</code></dd>
+        </div>
+        <div>
+          <dt class="opacity-60">Billed by</dt>
+          <dd>Ryan Wolfe</dd>
+        </div>
+        <div>
+          <dt class="opacity-60">Payments processed by</dt>
+          <dd>Stripe</dd>
+        </div>
+        <div>
+          <dt class="opacity-60">Support</dt>
+          <dd><a href={`mailto:${supportEmail}`} class="hover:underline">{supportEmail}</a></dd>
+        </div>
+        <div>
+          <dt class="opacity-60">Refunds</dt>
+          <dd>Ask and it's done. No dispute needed.</dd>
+        </div>
+      </dl>
+    </GlassPanel>
+  </div>
+</Layout>
