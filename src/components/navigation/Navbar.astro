@@ -28,33 +28,9 @@ const navItems = [
   <div class="flex items-center gap-6">
     <div class="hidden md:flex items-center gap-6 text-sm font-medium">
       {navItems.map((item) => (
-        item.children ? (
-          <div class="group relative">
-            <a 
-              href={item.href} 
-              class="flex items-center gap-1 hover:text-brand-500 transition-colors py-2"
-            >
-              {item.label}
-              <Icon name="lucide:chevron-down" class="w-3 h-3 opacity-50 group-hover:rotate-180 transition-transform duration-200" />
-            </a>
-            <div class="absolute top-full left-1/2 -translate-x-1/2 pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible translate-y-1 group-hover:translate-y-0 transition-all duration-200 pointer-events-none group-hover:pointer-events-auto z-[100]">
-              <div class="bg-white/90 dark:bg-neutral-900/90 backdrop-blur-xl rounded-xl p-2 min-w-[140px] shadow-lg border border-black/5 dark:border-white/10">
-                {item.children.map((child) => (
-                  <a 
-                    href={child.href}
-                    class="block px-3 py-2 rounded-lg hover:bg-brand-500/10 hover:text-brand-500 transition-colors text-sm"
-                  >
-                    {child.label}
-                  </a>
-                ))}
-              </div>
-            </div>
-          </div>
-        ) : (
-          <a href={item.href} class="hover:text-brand-500 transition-colors py-2">
-            {item.label}
-          </a>
-        )
+        <a href={item.href} class="hover:text-brand-500 transition-colors py-2">
+          {item.label}
+        </a>
       ))}
     </div>
     
@@ -74,23 +50,9 @@ const navItems = [
 <!-- Mobile menu -->
 <div id="mobile-menu" class="md:hidden fixed inset-x-4 top-20 z-40 glass-panel rounded-2xl p-4 opacity-0 invisible translate-y-2 transition-all duration-200">
   {navItems.map((item) => (
-    <div class="mobile-nav-group">
-      <a href={item.href} class="block py-2 font-medium hover:text-brand-500 transition-colors">
-        {item.label}
-      </a>
-      {item.children && (
-        <div class="pl-4 border-l border-white/10 ml-2 mb-2">
-          {item.children.map((child) => (
-            <a 
-              href={child.href}
-              class="block py-1.5 text-sm text-gray-600 dark:text-gray-400 hover:text-brand-500 transition-colors"
-            >
-              {child.label}
-            </a>
-          ))}
-        </div>
-      )}
-    </div>
+    <a href={item.href} class="block py-2 font-medium hover:text-brand-500 transition-colors">
+      {item.label}
+    </a>
   ))}
 </div>
 
@@ -105,6 +67,8 @@ const navItems = [
 
 <script>
   const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+  let documentClickBound = false;
 
   const initNavbar = () => {
     // Logo scramble effect
@@ -121,7 +85,7 @@ const navItems = [
         intervalId = setInterval(() => {
           element.innerText = originalValue
             .split('')
-            .map((letter: string, index: number) => {
+            .map((_letter: string, index: number) => {
               if (index < iteration) return originalValue[index];
               return letters[Math.floor(Math.random() * letters.length)];
             })
@@ -139,16 +103,15 @@ const navItems = [
     const mobileMenuBtn = document.getElementById('mobile-menu-btn');
     const mobileMenu = document.getElementById('mobile-menu');
 
-    if (mobileMenuBtn && mobileMenu) {
+    // Both DOMContentLoaded and astro:page-load fire on the *initial* load when
+    // ClientRouter is active. Binding twice made every click toggle `open` twice,
+    // so the button did nothing. Bind once per element; view transitions swap in
+    // fresh nodes each navigation, which resets the flag and rebinds.
+    if (mobileMenuBtn && mobileMenu && !mobileMenuBtn.dataset.bound) {
+      mobileMenuBtn.dataset.bound = 'true';
+
       mobileMenuBtn.addEventListener('click', () => {
         mobileMenu.classList.toggle('open');
-      });
-
-      // Close menu when clicking outside
-      document.addEventListener('click', (e) => {
-        if (!mobileMenu.contains(e.target as Node) && !mobileMenuBtn.contains(e.target as Node)) {
-          mobileMenu.classList.remove('open');
-        }
       });
 
       // Close menu on navigation
@@ -156,6 +119,21 @@ const navItems = [
         link.addEventListener('click', () => {
           mobileMenu.classList.remove('open');
         });
+      });
+    }
+
+    // Close menu when clicking outside. `document` survives view transitions, so
+    // this is registered once for the lifetime of the tab and re-resolves the
+    // current nodes on each event rather than closing over stale ones.
+    if (!documentClickBound) {
+      documentClickBound = true;
+      document.addEventListener('click', (e) => {
+        const menu = document.getElementById('mobile-menu');
+        const btn = document.getElementById('mobile-menu-btn');
+        if (!menu || !btn) return;
+        if (!menu.contains(e.target as Node) && !btn.contains(e.target as Node)) {
+          menu.classList.remove('open');
+        }
       });
     }
   };

@@ -39,8 +39,12 @@ import { Icon } from 'astro-icon/components';
 
     window.localStorage.setItem('theme', theme);
 
+    // Both DOMContentLoaded and astro:page-load fire on the *initial* load when
+    // ClientRouter is active, so bind once per element. View transitions swap in
+    // a fresh button each navigation, which resets the flag and rebinds.
     const handle = document.getElementById('theme-toggle');
-    if (handle) {
+    if (handle && !handle.dataset.bound) {
+      handle.dataset.bound = 'true';
       handle.addEventListener('click', handleToggleClick);
     }
   };

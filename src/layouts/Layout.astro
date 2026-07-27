@@ -76,8 +76,18 @@ const ogImage = Astro.props.ogImage || (Astro.url.pathname !== '/' ? `/og${Astro
     <Analytics />
 
     <script>
+      // `document` survives view transitions, so the mousemove handler is bound
+      // once for the lifetime of the tab. Re-binding per page-load would leak a
+      // listener per navigation, each closing over panels from a swapped-out DOM.
+      let panels: NodeListOf<Element> = document.querySelectorAll('.glass-panel');
+      let spotlightBound = false;
+
       const initSpotlight = () => {
-        const panels = document.querySelectorAll('.glass-panel');
+        // Refresh the node list instead — the old panels are gone after a swap.
+        panels = document.querySelectorAll('.glass-panel');
+
+        if (spotlightBound) return;
+        spotlightBound = true;
 
         document.addEventListener('mousemove', (e) => {
           panels.forEach((panel) => {
