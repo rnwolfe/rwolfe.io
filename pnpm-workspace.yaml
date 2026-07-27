@@ -1,0 +1,7 @@
+# pnpm blocks dependency build scripts by default. Both of these are first-party
+# Astro build-chain deps that are non-functional without their postinstall:
+#   esbuild — postinstall links the platform-native binary Vite/Astro shells out to
+#   sharp   — postinstall resolves libvips for `astro:assets` image optimization
+allowBuilds:
+  esbuild: true
+  sharp: true

@@ -1,11 +1,15 @@
 ---
-import { getEntries } from 'astro:content';
+import { getEntries, type ReferenceDataEntry } from 'astro:content';
 import GlassPanel from './GlassPanel.astro';
 
+// These arrive straight from a `reference('…')` schema field, so they are already
+// `{ collection, id }` pairs. Typing them as `any[]` gave `getEntries` nothing to
+// infer its collection generic from, so it collapsed to `never[]` and every
+// `.data` / `.id` access below was a type error.
 interface Props {
-	relatedProjects?: any[];
-	relatedDecisions?: any[];
-	relatedPosts?: any[];
+	relatedProjects?: ReferenceDataEntry<'projects'>[];
+	relatedDecisions?: ReferenceDataEntry<'decisions'>[];
+	relatedPosts?: ReferenceDataEntry<'blog'>[];
 	class?: string;
 }
 

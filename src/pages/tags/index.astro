@@ -106,7 +106,7 @@ const letters = Object.keys(groupedTags).sort();
               {letter}
             </h2>
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-              {groupedTags[letter].map(({ tag, count, collections }) => (
+              {groupedTags[letter].map(({ tag, count }) => (
                 <a
                   href={`/tags/${tag.toLowerCase()}`}
                   class="group flex items-center justify-between p-3 rounded-lg bg-zinc-50 dark:bg-white/5 hover:bg-brand-500/10 transition-colors"
