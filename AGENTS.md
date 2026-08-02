@@ -30,7 +30,7 @@ import { getCollection } from 'astro:content';
 const posts = await getCollection('blog');
 ```
 
-Collections: `blog`, `notes`, `projects`, `decisions`, `uses`, `journey`
+Collections: `blog`, `notes`, `projects`, `journey`
 
 **Theme Toggle**
 - Preference stored in `localStorage` as `'theme'`
@@ -110,7 +110,6 @@ A personal site should demonstrate technical competence while revealing personal
 **Keep It Current**
 - Outdated content hurts more than no content
 - Archive old projects rather than delete
-- Update "Uses" page when stack changes
 
 **Quality Over Quantity**
 - One great case study > ten shallow posts
