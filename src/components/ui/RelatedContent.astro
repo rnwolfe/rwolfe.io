@@ -8,24 +8,21 @@ import GlassPanel from './GlassPanel.astro';
 // `.data` / `.id` access below was a type error.
 interface Props {
 	relatedProjects?: ReferenceDataEntry<'projects'>[];
-	relatedDecisions?: ReferenceDataEntry<'decisions'>[];
 	relatedPosts?: ReferenceDataEntry<'blog'>[];
 	class?: string;
 }
 
-const { 
-	relatedProjects = [], 
-	relatedDecisions = [], 
+const {
+	relatedProjects = [],
 	relatedPosts = [],
-	class: className 
+	class: className
 } = Astro.props;
 
 // Resolve references to actual entries
 const projects = relatedProjects.length ? await getEntries(relatedProjects) : [];
-const decisions = relatedDecisions.length ? await getEntries(relatedDecisions) : [];
 const posts = relatedPosts.length ? await getEntries(relatedPosts) : [];
 
-const hasRelated = projects.length > 0 || decisions.length > 0 || posts.length > 0;
+const hasRelated = projects.length > 0 || posts.length > 0;
 ---
 
 {hasRelated && (
@@ -57,32 +54,6 @@ const hasRelated = projects.length > 0 || decisions.length > 0 || posts.length >
 										{project.data.outcomeSummary}
 									</p>
 								)}
-							</div>
-						</div>
-					</GlassPanel>
-				</a>
-			))}
-			
-			{decisions.map((decision) => (
-				<a 
-					href={`/decisions/${decision.id}`}
-					class="group"
-				>
-					<GlassPanel class="p-4 h-full hover:border-purple-500/30 transition-colors">
-						<div class="flex items-start gap-3">
-							<div class="flex-shrink-0 w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center">
-								<svg class="w-4 h-4 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-								</svg>
-							</div>
-							<div class="min-w-0">
-								<span class="text-xs font-mono uppercase tracking-wider text-gray-400 dark:text-gray-500">Decision</span>
-								<h4 class="font-medium text-sm group-hover:text-purple-500 transition-colors truncate">
-									{decision.data.title}
-								</h4>
-								<p class="text-xs text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">
-									{decision.data.decision}
-								</p>
 							</div>
 						</div>
 					</GlassPanel>

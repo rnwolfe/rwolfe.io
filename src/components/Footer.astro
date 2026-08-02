@@ -1,6 +1,6 @@
 ---
 /**
- * Home for everything demoted out of primary nav: notes, tags, start, uses,
+ * Home for everything demoted out of primary nav: notes, tags, start,
  * journey, contact, work. Reachable and linkable — just not competing for a
  * first-time reader's attention.
  *
@@ -28,8 +28,6 @@ const columns = [
     title: 'Building',
     links: [
       ...(hasProjects ? [{ label: 'Projects', href: '/projects' }] : []),
-      { label: 'Decisions', href: '/decisions' },
-      { label: 'Uses', href: '/uses' },
     ],
   },
   {
@@ -53,7 +51,7 @@ const columns = [
       </p>
     </div>
 
-    {columns.map((col) => (
+    {columns.filter((col) => col.links.length > 0).map((col) => (
       <div>
         <h2 class="font-semibold mb-3 text-gray-900 dark:text-gray-100">{col.title}</h2>
         <ul class="space-y-2">

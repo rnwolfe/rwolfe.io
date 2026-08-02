@@ -7,7 +7,6 @@ import path from 'path';
 export async function getStaticPaths() {
     const blog = await getCollection('blog');
     const projects = await getCollection('projects');
-    const decisions = await getCollection('decisions');
     const notes = await getCollection('notes');
 
     const entries = [
@@ -15,7 +14,6 @@ export async function getStaticPaths() {
         { params: { slug: 'work' }, props: { title: 'I run a production agent fleet. I\'ll build yours.', type: 'Work with me' } },
         ...blog.map(post => ({ params: { slug: `blog/${post.id}` }, props: { title: post.data.title, type: 'Blog' } })),
         ...projects.map(project => ({ params: { slug: `projects/${project.id}` }, props: { title: project.data.title, type: 'Project' } })),
-        ...decisions.map(decision => ({ params: { slug: `decisions/${decision.id}` }, props: { title: decision.data.title, type: 'Decision' } })),
         ...notes.map(note => ({ params: { slug: `notes/${note.id}` }, props: { title: note.data.title, type: 'Note' } })),
     ];
 

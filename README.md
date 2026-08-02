@@ -25,8 +25,6 @@ Personal website and digital garden of Ryan Wolfe.
 | `blog` | Long-form articles and tutorials |
 | `notes` | Quick thoughts and TILs |
 | `projects` | Project case studies |
-| `decisions` | Architecture Decision Records (ADRs) |
-| `uses` | Tools, software, and gear |
 | `journey` | Career timeline entries |
 
 ## Project Structure
@@ -58,6 +56,5 @@ src/
 - `/notes` - Quick notes
 - `/projects` - Project showcase
 - `/journey` - Career timeline
-- `/uses` - Tech stack and tools
 - `/tags` - Content taxonomy
 - `/about` - About page

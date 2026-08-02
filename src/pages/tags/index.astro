@@ -6,7 +6,6 @@ import { getCollection } from 'astro:content';
 // Gather all tags from all collections that have them
 const blog = await getCollection('blog');
 const notes = await getCollection('notes');
-const decisions = await getCollection('decisions');
 const projects = await getCollection('projects');
 
 // Build tag counts
@@ -39,7 +38,6 @@ const addTech = (items: any[], collectionName: string) => {
 
 addTags(blog, 'blog');
 addTags(notes, 'notes');
-addTags(decisions, 'decisions');
 addTech(projects, 'projects');
 
 // Sort by count descending
@@ -72,7 +70,7 @@ const letters = Object.keys(groupedTags).sort();
       </h1>
       <p class="text-zinc-500 dark:text-zinc-400 text-lg max-w-2xl">
         Explore content across all collections by topic. Tags are gathered from blog posts, notes,
-        decisions, and project tech stacks.
+        and project tech stacks.
       </p>
     </header>
 

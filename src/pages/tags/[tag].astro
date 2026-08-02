@@ -8,7 +8,6 @@ import { getCollection } from 'astro:content';
 export async function getStaticPaths() {
   const blog = await getCollection('blog');
   const notes = await getCollection('notes');
-  const decisions = await getCollection('decisions');
   const projects = await getCollection('projects');
 
   // Collect all unique tags
@@ -20,10 +19,6 @@ export async function getStaticPaths() {
 
   notes.forEach((note) => {
     (note.data.tags || []).forEach((tag: string) => allTags.add(tag.toLowerCase()));
-  });
-
-  decisions.forEach((decision) => {
-    (decision.data.tags || []).forEach((tag: string) => allTags.add(tag.toLowerCase()));
   });
 
   projects.forEach((project) => {
@@ -41,7 +36,6 @@ const { tag } = Astro.props;
 // Fetch all content and filter by tag
 const blog = await getCollection('blog');
 const notes = await getCollection('notes');
-const decisions = await getCollection('decisions');
 const projects = await getCollection('projects');
 
 const matchingBlog = blog.filter((post) =>
@@ -52,16 +46,12 @@ const matchingNotes = notes.filter((note) =>
   (note.data.tags || []).some((t: string) => t.toLowerCase() === tag)
 );
 
-const matchingDecisions = decisions.filter((decision) =>
-  (decision.data.tags || []).some((t: string) => t.toLowerCase() === tag)
-);
-
 const matchingProjects = projects.filter((project) =>
   (project.data.tech || []).some((t: string) => t.toLowerCase() === tag)
 );
 
 const totalCount =
-  matchingBlog.length + matchingNotes.length + matchingDecisions.length + matchingProjects.length;
+  matchingBlog.length + matchingNotes.length + matchingProjects.length;
 
 // Sort each by date
 const sortByDate = (a: any, b: any) => {
@@ -72,7 +62,6 @@ const sortByDate = (a: any, b: any) => {
 
 matchingBlog.sort(sortByDate);
 matchingNotes.sort(sortByDate);
-matchingDecisions.sort(sortByDate);
 matchingProjects.sort(sortByDate);
 ---
 
@@ -162,47 +151,6 @@ matchingProjects.sort(sortByDate);
                     </div>
                     <svg
                       class="w-5 h-5 text-zinc-300 dark:text-zinc-600 group-hover:text-brand-500 group-hover:translate-x-1 transition-all shrink-0"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                    </svg>
-                  </div>
-                </GlassPanel>
-              </a>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* Decisions */}
-      {matchingDecisions.length > 0 && (
-        <section>
-          <h2 class="text-xs font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest font-mono mb-4">
-            Decisions ({matchingDecisions.length})
-          </h2>
-          <div class="space-y-4">
-            {matchingDecisions.map((decision) => (
-              <a href={`/decisions/${decision.id}`} class="block group">
-                <GlassPanel class="p-6 hover:border-purple-500/30 transition-all">
-                  <div class="flex items-start justify-between gap-4">
-                    <div class="flex-1 min-w-0">
-                      <div class="flex items-center gap-3 mb-2">
-                        <StatusBadge status={decision.data.status} />
-                        <span class="text-xs text-zinc-400 dark:text-zinc-500 font-mono">
-                          <FormattedDate date={decision.data.pubDate} />
-                        </span>
-                      </div>
-                      <h3 class="text-lg font-bold text-zinc-900 dark:text-white group-hover:text-purple-500 transition-colors">
-                        {decision.data.title}
-                      </h3>
-                      <p class="text-sm text-zinc-500 dark:text-zinc-400 mt-1 line-clamp-2">
-                        {decision.data.decision}
-                      </p>
-                    </div>
-                    <svg
-                      class="w-5 h-5 text-zinc-300 dark:text-zinc-600 group-hover:text-purple-500 group-hover:translate-x-1 transition-all shrink-0"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
