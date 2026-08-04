@@ -6,7 +6,6 @@ pubDate: 2026-02-03
 status: completed
 tags: ["leadership", "delegation", "psychology", "staff-engineering", "productivity"]
 relatedProjects: []
-relatedDecisions: []
 ---
 
 Delegation is one of those words that sounds like a neutral management skill until you try to do it and realize it’s… emotional.
